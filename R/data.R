@@ -10,7 +10,6 @@
 #'  Some functional classification codes represent combinations of others. 
 #'  The dataset's functional classifications are filtered such that totals 
 #'  across services are not contaminated by double-counting. 
-#' @type data
 #' @name fir_services
 #' @format A tibble with 305,108 rows and 10 columns: 
 #' \describe{
@@ -25,3 +24,22 @@
 #'  \item{cost_payer}{The payer of the cost (Ontario, Canada, Other Municipalities, Users)}
 #'  \item{total}{The total amount of the cost of a service to a given payer in a given year and municipality}
 #' }
+"fir_services"
+
+#' @rdname fir_data
+#' @name fir_statistics
+#' @format A tibble with key statistics from the FIR data
+"fir_statistics"
+
+#' Ontario Charity Revenue Data 2019-2023 (T3010)
+#' @rdname t3010
+#' @name t3010
+#' @format A tibble with 145,645 rows and 23 columns
+"t3010"
+
+#' Ontario CPI 2015-2023
+#' @description CPI data for All Items in Ontario, 2015-2023, per Statistics Canada
+#' @rdname on_cpi
+#' @name on_cpi
+#' @format A tibble with 9 rows and 2 columns
+"on_cpi"

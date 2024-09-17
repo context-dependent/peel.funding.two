@@ -35,7 +35,10 @@ fir_meta <- list(
   service_classification = 
     tibble::tribble(
       ~service,                ~service_type, ~slc_line, 
-      "Protection",            "Core",         c("L0499"), 
+      "Fire",                  "Core",         c("L0410"),
+      "Police and Courts",     "Core",         c("L0420", "L0421", "L0422"),
+      "Inspection",            "Core",         c("L0430", "L0440", "L0445"), 
+      "Other Protection",      "Core",         c("L0460", "L0450", "L0498"),
       "Transportation",        "Core",         c("L0611", "L0612", "L0613", "L0614", "L0621", "L0622", "L0640", "L0650", "L0660", "L0698"), 
       "Environmental",         "Core",         c("L0899"),
       "Planning",              "Core",         c("L1899"),
@@ -196,10 +199,89 @@ pivot_payers <- function(fir_data) {
     dplyr::ungroup()
 }
 
+aggregate_ut_services <- function(fir_data) {
+  fir_data |>
+    group_by(service, service_type, cost_type, cost_payer) |> 
+    sum_over_uts(
+      c(amount)
+    )
+}
 
-fir_data <- import_fir_data(2015:2023, fir_meta)
-fir_services <- fir_data$services
-fir_statistics <- fir_data$stats
+sum_over_uts <- function(fir_data, vars) {
+  d <- fix_fir_ut_number(fir_data)
+  ut_index <- generate_ut_index(d)
+  ut_data <- d |> 
+    dplyr::group_by(marsyear, ut_number, .add = TRUE) |> 
+    dplyr::summarize(
+      dplyr::across({{vars}}, sum), 
+      .groups = "drop"
+    )
+  ut_index |> 
+    dplyr::left_join(ut_data, by = c("marsyear", "ut_number"))
+}
+
+slice_from_uts <- function(fir_data, vars) {
+  fir_data |> 
+    dplyr::filter(tier_code %in% c("UT", "ST")) |> 
+    dplyr::select(marsyear, munid, {{vars}})
+}
+
+aggregate_ut_stats <- function(fir_stats) {
+  fir_stats |> 
+    slice_from_uts(population) |> 
+    select(marsyear, munid, population)
+}
+
+fix_fir_ut_number <- function(fir_data) {
+  fir_data |> 
+    dplyr::mutate(
+      ut_number = dplyr::case_when(
+        tier_code == "ST" ~ as.integer(munid), 
+        TRUE ~ as.integer(ut_number)
+      )
+    )
+}
+
+generate_ut_index <- function(fir_data) {
+  fir_data |> 
+    dplyr::filter(tier_code %in% c("UT", "ST")) |> 
+    dplyr::group_by(marsyear, ut_number) |> 
+    dplyr::slice(1) |> 
+    dplyr::select(marsyear, ut_number, munid, municipality_desc, tier_code) 
+}
+
+
+fir_raw <- import_fir_data(2015:2023, fir_meta)
+fir_services <- fir_raw$services
+fir_statistics <- fir_raw$stats
 
 usethis::use_data(fir_services, overwrite = TRUE)
 usethis::use_data(fir_statistics, overwrite = TRUE)
+
+fir_services_ut <- fir_services |>
+  aggregate_ut_services()
+
+fir_statistics_ut <- fir_statistics |> 
+  aggregate_ut_stats()
+
+fir_ut_pc <- fir_services_ut |> 
+  dplyr::left_join(fir_statistics_ut, by = c("marsyear", "munid")) |> 
+  dplyr::mutate(
+    amount_pc = amount / population
+  ) |> 
+  dplyr::left_join(
+    on_cpi, 
+    by = c("marsyear" = "year")
+  ) |> 
+  mutate(
+    across(
+      c(amount, amount_pc), 
+      list(`cd23` = ~ .x * cpi_23f)
+    )
+  )
+
+fir_data <- fir_ut_pc
+
+
+usethis::use_data(fir_data, overwrite = TRUE)
+usethis::use_data(fir_meta, overwrite = TRUE)

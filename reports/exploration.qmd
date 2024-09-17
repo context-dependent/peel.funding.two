@@ -1,0 +1,548 @@
+# Exploratory Analysis
+
+## Data and Packages
+
+```{r setup}
+library(tidyverse)
+library(gt)
+library(peel.funding.two)
+
+fetch_clustering <- memoise::memoise(function() {
+  googlesheets4::gs4_auth()
+  googlesheets4::gs4_find("t3010-fir-clusters") |> 
+    googlesheets4::read_sheet(sheet = 1)
+})
+
+dl_button <- function(x, name) {
+  x |> 
+    downloadthis::download_this(
+      output_name = glue::glue("sk-overview_{name}"), 
+      output_extension = ".csv", 
+      button_label = "Download data as CSV", 
+      button_type = "default", 
+      has_icon = TRUE, 
+      icon = "fa fa-save"
+    )
+}
+
+key_comps <- c(
+  21000, # Peel
+  20002, # Toronto
+  25005, # Hamilton
+  19000, # York
+  6005,  # Ottawa
+  30000 # Waterloo Region
+  # 24000, # Halton
+  # 1000,  # Dundas
+  # 18000, # Durham
+  # 23000, # Wellington
+  # 26000 # Niagara
+)
+```
+
+## Municipal Services
+
+```{r fir-data}
+fir <- fir_data |> 
+  group_by(munid) |> 
+  filter(min(population) > 50000)
+```
+
+### Service Classification
+
+```{r fir-service-codes}
+fir_meta$service_classification |> 
+  group_by(service_type, service, slc_line) |> 
+  slice(1) |> 
+  group_by(service_type, service) |> 
+  summarize(slc_lines = str_c(slc_line, collapse = "; ")) |> 
+  group_by(service_type) |> 
+  gt(rowname_col = "service") |> 
+  gt::tab_stub_indent(rows = everything()) |> 
+  gt::tab_style(
+    style = gt::cell_text(weight = "bold"),
+    locations = gt::cells_row_groups(groups = everything())
+  )
+```
+
+### Provincial Funding by Service
+
+```{r fir-prov-contributions}
+prov_contributions <- fir |> 
+  group_by(service_type, service, marsyear) |> 
+  filter(cost_payer == "ontario") |>
+  summarize(
+    amount_prov_cd23 = sum(amount_cd23)
+  ) |> 
+  summarize(
+    annual_mean_prov_cd23 = mean(amount_prov_cd23, na.rm = TRUE)
+  ) |> 
+  arrange(desc(annual_mean_prov_cd23))
+
+prov_contributions |> 
+  gt() |> 
+  fmt_currency(columns = c(annual_mean_prov_cd23))
+```
+
+### Services of Interest
+
+We're interested in services that receive meaningful provincial funding. 
+To begin, we'll focus on services that --- across the municipalities in the sample --- receive an annual average of at least $100,000,000 in provincial funding.
+
+```{r fir-service-scope}
+included_services <- prov_contributions |> 
+  filter(annual_mean_prov_cd23 >= 1e8)  |>  
+  select(service)
+
+included_services |> 
+  gt()
+```
+
+### Provincial Funding Over Time
+
+#### Total Funding
+
+```{r fir-prov-over-time}
+fir |> 
+  semi_join(included_services) |> 
+  group_by(marsyear, service_type, service) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_cd23 * (cost_payer == "ontario"))
+  ) |> 
+  ggplot(aes(x = marsyear, y = amount_prov_cd23, color = service_type)) +
+  geom_path(aes(group = service)) + 
+  geom_point(shape = 21, fill = "white") + 
+  facet_wrap(~service_type + service, scales = "free_y")
+```
+
+#### Operating Funding
+
+```{r fir-prov-over-time-opex}
+fir |> 
+  filter(cost_type == "operating") |> 
+  semi_join(included_services) |> 
+  group_by(marsyear, service_type, service) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_cd23 * (cost_payer == "ontario"))
+  ) |> 
+  ggplot(aes(x = marsyear, y = amount_prov_cd23, color = service_type)) +
+  geom_path(aes(group = service)) + 
+  geom_point(shape = 21, fill = "white") + 
+  facet_wrap(~service_type + service, scales = "free_y")
+```
+
+### Per Capita
+
+Per capita funding is doesn't show the same dramatic drops between 2022 and 2023, suggesting that the drop shown in the previous plots is due to unreported data from some municipalities in the dataset. 
+This is consistent with the fact that the fir source data are continually updated, and that municipal reporting lags of up to a year are common. 
+
+```{r fir-prov-per-capita}
+fir |> 
+  semi_join(included_services) |> 
+  group_by(marsyear, service_type, service, munid) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_cd23 * (cost_payer == "ontario")), 
+    population = first(population),
+  ) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_prov_cd23), 
+    population = sum(population)
+  ) |> 
+  mutate(
+    amount_prov_pc_cd23 = amount_prov_cd23 / population
+  ) |> 
+  ggplot(aes(x = marsyear, y = amount_prov_pc_cd23, color = service_type)) +
+  geom_path(aes(group = service)) + 
+  geom_point(shape = 21, fill = "white") + 
+  facet_wrap(~service_type + service, scales = "free_y")  
+```
+
+### Per Capita Annualized Averages
+
+```{r fir-prov-per-capita-annualized}
+dplt_avg_per_service <- fir |> 
+  semi_join(included_services) |>
+  group_by(service_type, service, munid, marsyear) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_cd23 * (cost_payer == "ontario")), 
+    population = first(population),
+  ) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_prov_cd23), 
+    population = sum(population)
+  ) |> 
+  mutate(
+    amount_prov_pc_cd23 = amount_prov_cd23 / population
+  )  |> 
+  summarize(
+    across(matches("amount_prov"), mean)
+  ) 
+  
+dplt_avg_per_service |> 
+  ggplot(aes(x = amount_prov_pc_cd23, y = fct_reorder(service, amount_prov_pc_cd23))) + 
+  geom_col(aes(fill = service_type))
+```
+
+### Peel Comparison
+
+```{r fir-peel-comparison}
+dplt_peel_per_service <- fir |> 
+  filter(municipality_desc == "Peel R") |> 
+  semi_join(included_services) |>
+  group_by(service_type, service, munid, marsyear) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_cd23 * (cost_payer == "ontario")), 
+    population = first(population),
+  ) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_prov_cd23), 
+    population = sum(population)
+  ) |> 
+  mutate(
+    amount_prov_pc_cd23 = amount_prov_cd23 / population
+  )  |> 
+  summarize(
+    across(matches("amount_prov"), mean)
+  ) 
+
+
+dplt_avg_per_service |> 
+  ggplot(aes(x = amount_prov_pc_cd23, y = fct_reorder(service, amount_prov_pc_cd23))) + 
+  geom_col(aes(fill = service_type)) + 
+  geom_point(data = dplt_peel_per_service)
+
+
+dplt_peel_per_service |> 
+  select(-amount_prov_cd23) |> 
+  rename(peel_pc = amount_prov_pc_cd23 ) |> 
+  left_join(
+    dplt_avg_per_service |> 
+      rename(on_pc = amount_prov_pc_cd23) |> 
+      select(service_type, service, on_pc), 
+    by = c("service_type", "service")
+  ) |> 
+  mutate(
+    `diff (peel_pc - on_pc)` = peel_pc - on_pc
+  ) |> 
+  gt() |> 
+  fmt_currency(columns = c(matches("_pc")))
+```
+
+### Key Comparator Municipalities
+
+```{r fir-key-comps}
+dplt_kc_per_service <- fir |> 
+  filter(munid %in% key_comps) |> 
+  semi_join(included_services) |>
+  group_by(service_type, service, munid, municipality_desc, marsyear) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_cd23 * (cost_payer == "ontario")), 
+    population = first(population),
+  ) |> 
+  summarize(
+    amount_prov_cd23 = sum(amount_prov_cd23), 
+    population = sum(population)
+  ) |> 
+  mutate(
+    amount_prov_pc_cd23 = amount_prov_cd23 / population
+  )  
+
+dplt_kc_per_service |> 
+  ungroup() |> 
+  select(-c(service_type, munid)) |> 
+  arrange(service, desc(amount_prov_pc_cd23)) |> 
+  group_by(service) |> 
+  gt(groupname_col = "service", rowname_col = "municipality_desc") |> 
+  gt::tab_stub_indent(rows = everything()) |> 
+  gt::tab_style(
+    style = gt::cell_text(weight = "bold"),
+    locations = gt::cells_row_groups(groups = everything())
+  ) |> 
+  fmt_currency(columns = c(matches("amount")), decimals = 2) |>
+  fmt_number(columns = c(population), decimals = 0) 
+```
+
+## Service Focal Points
+
+- Childcare
+- Senior Support
+- Public Health
+
+```{r fir-service-focal-points}
+service_focal_points <- fir |> 
+  filter(
+    marsyear == 2022,
+    service %in% c("Childcare", "Senior Support", "Public Health")) |>
+  mutate(service = factor(service)) |> 
+  group_by(munid, municipality_desc, service, year = marsyear) |> 
+  summarize(
+    total_expense = sum(amount),
+    provincial_contribution = sum(amount * (cost_payer == "ontario")), 
+    population = first(population), 
+    provincial_contribution_pc = provincial_contribution / population, 
+    .groups = "drop"
+  ) 
+
+service_focal_points |> 
+  slice(1:10) |> 
+  gt() |> 
+  tab_source_note(
+    dl_button(service_focal_points, "tbl-fir-focal-points")
+  )
+
+```
+
+## Charities
+
+```{r charity-data}
+charities <- t3010 |> 
+  filter(data_year <= 2022) |> 
+  mutate(category = factor(category)) |> 
+  left_join(on_cpi, by = c("data_year" = "year")) |> 
+  left_join(fir_statistics, by = c("data_year" = "marsyear", "munid")) |> 
+  semi_join(fir, by = c("munid")) |> 
+  mutate(across(matches("revenue"), list(cd23 = ~ . * cpi_23f))) |> 
+  group_by(munid) |> 
+  fill(municipality_desc, .direction = "downup")
+```
+
+
+### Charity Categories
+
+```{r charity-categories}
+
+charities |> 
+  filter(data_year == 2022) |> 
+  arrange(category_code, sub_category_code, desc(revenue_total_cd23)) |> 
+  group_by(sub_category_code, category, sub_category) |> 
+  summarize(
+    revenue_total_2022 = sum(revenue_total, na.rm = TRUE),
+    revenue_provincial_2022 = sum(revenue_provincial, na.rm = TRUE),
+    example_org = first(legal_name), 
+  ) |> 
+  group_by(category) |> 
+  gt() |> 
+  fmt_currency(columns = c(matches("revenue")))
+```
+
+### Categories of Interest
+
+We're interested in categories of charity that meet the following criteria: 
+
+- The category receives a meaningful amount of provincial funding.
+- The category implies that most of its member organizations deliver some form of universally accessible social service.
+
+```{r ch-revenue-by-category}
+dplt_ch_cat <- charities |> 
+  group_by(category, data_year, munid) |> 
+  summarize(
+    n = n(), 
+    revenue_total_cd23 = sum(revenue_total_cd23, na.rm = TRUE), 
+    revenue_provincial_cd23 = sum(revenue_provincial_cd23, na.rm = TRUE), 
+    population = first(population)
+  ) |> 
+  summarize(
+    across(matches("revenue|^n$|population"), ~sum(.x, na.rm = TRUE)), 
+  ) |>
+  mutate(
+    revenue_provincial_pc_cd23 = revenue_provincial_cd23 / population,
+    revenue_total_pc_cd23 = revenue_total_cd23 / population
+  ) |> 
+  summarize(
+    across(matches("revenue|n"), mean)
+  )
+
+fir |> 
+  anti_join(charities, by = c("munid")) |> 
+  count(munid)
+
+dplt_ch_cat |> 
+  arrange(desc(revenue_provincial_cd23)) |> 
+  gt() |> 
+  fmt_currency(columns = c(matches("revenue_(prov|total)")), decimals = 0) |> 
+  fmt_currency(columns = c(matches("_pc_")), decimals = 2) |> 
+  fmt_number(columns = c(n), decimals = 0)  
+```
+
+### Gaps by Category
+
+```{r ch-gaps-by-category} 
+dplt_ch_cat_peel <- charities |> 
+  filter(municipality_desc == "Peel R") |> 
+  group_by(category, data_year) |> 
+  summarize(
+    n = n(), 
+    revenue_provincial_cd23 = sum(revenue_provincial_cd23, na.rm = TRUE), 
+    population = first(population)
+  ) |>
+  mutate(
+    peel_pc_cd23 = revenue_provincial_cd23 / population
+  ) |> 
+  summarize(
+    peel_pc_cd23 = mean(peel_pc_cd23)
+  ) 
+
+dplt_ch_cat |> 
+  ungroup() |> 
+  select(
+    category, 
+    on_pc_cd23 = revenue_provincial_pc_cd23
+  ) |> 
+  left_join(
+    dplt_ch_cat_peel, 
+    by = c("category")
+  ) |>
+  mutate(
+    peel_pc_cd23 = case_when(
+      is.na(peel_pc_cd23) ~ 0, 
+      TRUE ~ peel_pc_cd23
+    ),
+    `diff (peel_pc - on_pc)` = peel_pc_cd23 - on_pc_cd23
+  ) |>
+  arrange(`diff (peel_pc - on_pc)`) |>
+  gt() |> 
+  fmt_currency(columns = c(matches("_pc")))
+```
+
+### Orgs Relieving Poverty
+```{r ch-orps-in-peel}
+tbl_orps <- charities |> 
+  filter(municipality_desc == "Peel R", category == "Organizations Relieving Poverty") |>
+  group_by(legal_name, sub_category) |> 
+  summarize(
+    revenue_total_cd23 = mean(revenue_total_cd23)
+  ) |>
+  arrange(sub_category, desc(revenue_total_cd23))  |> 
+  select(legal_name, sub_category, revenue_total_cd23) 
+
+
+tbl_orps |>  
+  group_by(sub_category) |> 
+  slice(1:3) |> 
+  ungroup() |> 
+  gt() |> 
+  fmt_currency(columns = c(revenue_total_cd23)) |> 
+  tab_source_note(
+    dl_button(tbl_orps, "tbl-peel-charities-orps")
+  )
+```
+
+### Core Health Reversal
+
+
+```{r ch-health-reversal}
+charities |> 
+  filter(municipality_desc == "Peel R", category == "Core Health Care") |>
+  group_by(legal_name, sub_category) |> 
+  summarize(
+    revenue_provincial_cd23 = mean(revenue_provincial_cd23)
+  ) |>
+  arrange(desc(revenue_provincial_cd23))  |> 
+  select(legal_name, sub_category, revenue_provincial_cd23) |> 
+  ungroup() |> 
+  head() |> 
+  gt() |> 
+  fmt_currency(columns = c(revenue_provincial_cd23))
+```
+
+### Key Comps on Core Health
+
+
+```{r ch-health-comps}
+charities |> 
+  filter(category == "Core Health Care") |> 
+  group_by(munid, municipality_desc, data_year) |> 
+  summarize(
+    revenue_provincial_cd23 = sum(revenue_provincial_cd23, na.rm = TRUE), 
+    population = first(population)
+  ) 
+
+```
+
+### Clusters of Charities
+
+```{r ch-clusters}
+clusters <- fetch_clustering() |> 
+  mutate(across(matches("code|line"), str_trim))
+
+charities |> 
+  count(category_code, sub_category_code) 
+
+t3010_clusters <- clusters |> 
+  filter(data_source == "cra") |> 
+  select(-slc_line) 
+
+missing <- t3010_clusters |> 
+  anti_join(charities, by = c("category_code", "sub_category_code"))  |> 
+  mutate(in_data = "Not in T3010 data")
+
+present <- t3010_clusters |> 
+  semi_join(charities, by = c("category_code", "sub_category_code")) |> 
+  mutate(in_data = "In T3010 data")
+
+bind_rows(missing, present) |> 
+  select(-data_source) |> 
+  group_by(in_data) |> 
+  gt(groupname_col = "in_data", rowname_col = "cluster") |> 
+  gt::tab_stub_indent(rows = everything()) |> 
+  gt::tab_style(
+    style = gt::cell_text(weight = "bold"),
+    locations = gt::cells_row_groups(groups = everything())
+  )
+
+```
+
+### Key Comparator Municipalities
+
+```{r ch-key-comps}
+
+kc_sample_pop <- fir |> 
+  filter(munid %in% key_comps) |> 
+  group_by(marsyear, munid) |> 
+  slice(1) |> 
+  pull(population) |> 
+  sum()
+
+dplt_ch_cat_kc <- charities |>
+  filter(munid %in% key_comps, data_year <= 2022) |> 
+  group_by(category, municipality_desc, munid, data_year) |> 
+  summarize(
+    n = n(), 
+    revenue_total_cd23 = sum(revenue_total_cd23, na.rm = TRUE), 
+    revenue_provincial_cd23 = sum(revenue_provincial_cd23, na.rm = TRUE), 
+    population = first(population)
+  ) |>
+  group_by(category, municipality_desc) |> 
+  summarize(
+    across(matches("revenue|population"), mean)
+  ) |> 
+  mutate(
+    revenue_provincial_pc_cd23 = revenue_provincial_cd23 / population,
+    revenue_total_pc_cd23 = revenue_total_cd23 / population
+  )
+
+
+dplt_ch_cat_kc |> 
+  filter(category %in% c("Community Resource", "Organizations Relieving Poverty", "Core Health Care", "Teaching Institutions")) |> 
+  ggplot(aes(x = revenue_provincial_pc_cd23, y = category)) + 
+  geom_col(aes(x = weighted_mean), data = function(d) d |> group_by(category) |> summarize(weighted_mean = weighted.mean(revenue_provincial_pc_cd23, population))) +
+  geom_point(aes(color = municipality_desc), size = 3, shape = 21, stroke = 2)
+
+
+dplt_ch_cat_kc |>
+  ungroup() |> 
+  filter(category %in% c("Community Resource", "Organizations Relieving Poverty", "Core Health Care", "Teaching Institutions")) |> 
+  select(category, municipality_desc, revenue_provincial_pc_cd23) |>
+  pivot_wider(names_from = municipality_desc, values_from = revenue_provincial_pc_cd23) |>
+  gt(rowname_col = "category") |> 
+  tab_stub_indent(rows = everything()) |>
+  fmt_currency(columns = c(matches("(R|C)$")), decimals = 0) |> 
+  fmt_currency(columns = c(matches("_pc_")), decimals = 2) |> 
+  tab_source_note(
+    dl_button(dplt_ch_cat_kc, "tbl-charities-key-comps")
+  )
+```
+
+### Updates
+
+- Changes from year to year

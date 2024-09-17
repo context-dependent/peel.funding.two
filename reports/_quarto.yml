@@ -1,0 +1,34 @@
+project:
+  type: book
+  output-dir: ../docs
+  execute-dir: project
+
+book:
+  title: "Peel Funding Analysis 2"
+  subtitle: "Data Analysis Reporting"
+  author: "Thomas McManus"
+  date: "2024-07-26"
+  chapters:
+    - index.qmd
+    - exploration.qmd
+    - references.qmd
+  favicon: favicon.png
+  sidebar:
+    logo: blueprint-logo.png
+
+bibliography: refs.bib
+
+format:
+  html:
+    theme: 
+      - cosmo
+      - custom.scss
+    code-fold: true
+    code-summary: "Show code"
+
+execute: 
+  cache: true
+  message: false
+  warning: false
+
+
