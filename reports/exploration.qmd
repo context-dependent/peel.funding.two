@@ -530,7 +530,7 @@ dplt_peel_orgs <- ch_clustered |>
 
 dplt_peel_orgs |> 
   arrange(analysis_category, desc(revenue_org_22)) |> 
-  group_by(analysis_category, t3010_category) |> 
+  group_by(analysis_category, t3010_code) |> 
   slice(1) |> 
   group_by(analysis_category) |> 
   gt(groupname_col = "analysis_category") |>

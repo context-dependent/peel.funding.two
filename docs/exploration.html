@@ -9646,7 +9646,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>dplt_peel_orgs <span class="sc">|&gt;</span> </span>
 <span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(analysis_category, <span class="fu">desc</span>(revenue_org_22)) <span class="sc">|&gt;</span> </span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(analysis_category, t3010_category) <span class="sc">|&gt;</span> </span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(analysis_category, t3010_code) <span class="sc">|&gt;</span> </span>
 <span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(analysis_category) <span class="sc">|&gt;</span> </span>
 <span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">"analysis_category"</span>) <span class="sc">|&gt;</span></span>
@@ -10133,18 +10133,88 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td colspan="5" id="Public Health" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Public Health</td>
 </tr>
 <tr class="even gt_row_group_first">
-<td class="gt_row gt_left" headers="Public Health  t3010_category">Community Resource</td>
-<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Suicide prevention</td>
-<td class="gt_row gt_center" headers="Public Health  t3010_code">0160-0014</td>
-<td class="gt_row gt_left" headers="Public Health  legal_name">Team Unbreakable</td>
-<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$193,716</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Addiction recovery programs and centres</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0001</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">THE PEEL ADDICTION ASSESSMENT AND REFERRAL CENTRE</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$4,283,726</td>
 </tr>
 <tr class="odd">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Community health centre / medical clinic</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0002</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">WELLFORT COMMUNITY HEALTH SERVICES</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$13,649,819</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Dental Clinic</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0003</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">HEALTH OUTREACH</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$34,131</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Counselling or support group programs</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0004</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">CANADIAN CELIAC ASSOCIATION TORONTO CHAPTER</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$9,043</td>
+</tr>
+<tr class="even">
 <td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
 <td class="gt_row gt_left" headers="Public Health  t3010_sub_category">First aid services</td>
 <td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0005</td>
 <td class="gt_row gt_left" headers="Public Health  legal_name">ORNGE</td>
 <td class="gt_row gt_right" headers="Public Health  revenue_org_22">$234,914,978</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Hospice</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0007</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">KAY BLAIR HOSPICE</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$55,105</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Providing palliative care service</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0009</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">Fund Homecare Canada</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Treatment / preventative care for specific disease / health condition</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0100-0014</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">ALZHEIMER SOCIETY OF DUFFERIN COUNTY</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$852,353</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Supportive Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">General health promotion / prevention</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0110-0004</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">WORKPLACE HEALTH WITHOUT BORDERS</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$12,040</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Supportive Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Health counselling and group support programs</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0110-0007</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">Canadian Association of Psychoanalytic Child Therapists (CAPCT)</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$34,417</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Supportive Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Respite for caregivers of persons with serious health conditions</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0110-0012</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">THE GOVERNING COUNCIL OF THE SALVATION ARMY IN CANADA/CONSEIL DE DIRECTION DE L'ARMÉE DU SALUT DU CANADA</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$3,021,930</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Supportive Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Services for adults and children with developmental disabilities</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0110-0014</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">APPLEWOOD CENTRE FOR ADULT LEARNING</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$460,045</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="Public Health  t3010_category">Protective Health Care</td>
@@ -10154,11 +10224,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="Public Health  revenue_org_22">$71,743</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Public Health  t3010_category">Supportive Health Care</td>
-<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Respite for caregivers of persons with serious health conditions</td>
-<td class="gt_row gt_center" headers="Public Health  t3010_code">0110-0012</td>
-<td class="gt_row gt_left" headers="Public Health  legal_name">THE GOVERNING COUNCIL OF THE SALVATION ARMY IN CANADA/CONSEIL DE DIRECTION DE L'ARMÉE DU SALUT DU CANADA</td>
-<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$3,021,930</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Protective Health Care</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Search and rescue / lifesaving services</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0120-0006</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">RESPOND SEARCH AND RESCUE ONTARIO</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$6,250</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Rape / sexual assault / abuse support</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0160-0012</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">ENDLESS POSSIBILITIES &amp; HOPE DEVELOPMENT ORGANIZATION</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$104,000</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Public Health  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="Public Health  t3010_sub_category">Suicide prevention</td>
+<td class="gt_row gt_center" headers="Public Health  t3010_code">0160-0014</td>
+<td class="gt_row gt_left" headers="Public Health  legal_name">Team Unbreakable</td>
+<td class="gt_row gt_right" headers="Public Health  revenue_org_22">$193,716</td>
 </tr>
 <tr class="even gt_group_heading_row">
 <td colspan="5" id="Childcare" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Childcare</td>
@@ -10175,20 +10259,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd gt_row_group_first">
 <td class="gt_row gt_left" headers="Senior Support  t3010_category">Relief of the Aged</td>
+<td class="gt_row gt_left" headers="Senior Support  t3010_sub_category">Home support/services (personal care / meals / housekeeping / shopping assistance / laundry / home repair)</td>
+<td class="gt_row gt_center" headers="Senior Support  t3010_code">0150-0002</td>
+<td class="gt_row gt_left" headers="Senior Support  legal_name">BRAMPTON MEALS-ON-WHEELS</td>
+<td class="gt_row gt_right" headers="Senior Support  revenue_org_22">$603,890</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Senior Support  t3010_category">Relief of the Aged</td>
+<td class="gt_row gt_left" headers="Senior Support  t3010_sub_category">Relieving isolation (companionship / accompaniment to social outings)</td>
+<td class="gt_row gt_center" headers="Senior Support  t3010_code">0150-0004</td>
+<td class="gt_row gt_left" headers="Senior Support  legal_name">CALEDON SENIORS CENTRE</td>
+<td class="gt_row gt_right" headers="Senior Support  revenue_org_22">$377,975</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Senior Support  t3010_category">Relief of the Aged</td>
 <td class="gt_row gt_left" headers="Senior Support  t3010_sub_category">Seniors' outreach programs (housekeeping / tax preparation, etc.)</td>
 <td class="gt_row gt_center" headers="Senior Support  t3010_code">0150-0005</td>
 <td class="gt_row gt_left" headers="Senior Support  legal_name">ACTIVE ADULT CENTRE OF MISSISSAUGA</td>
 <td class="gt_row gt_right" headers="Senior Support  revenue_org_22">$727,652</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="even">
+<td class="gt_row gt_left" headers="Senior Support  t3010_category">Relief of the Aged</td>
+<td class="gt_row gt_left" headers="Senior Support  t3010_sub_category">Transportation for seniors</td>
+<td class="gt_row gt_center" headers="Senior Support  t3010_code">0150-0007</td>
+<td class="gt_row gt_left" headers="Senior Support  legal_name">CHURCH COMMUNITY VOLUNTEERS INC.</td>
+<td class="gt_row gt_right" headers="Senior Support  revenue_org_22">$880</td>
+</tr>
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="General Assistance" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">General Assistance</td>
 </tr>
-<tr class="odd gt_row_group_first">
+<tr class="even gt_row_group_first">
+<td class="gt_row gt_left" headers="General Assistance  t3010_category">Organizations Relieving Poverty</td>
+<td class="gt_row gt_left" headers="General Assistance  t3010_sub_category">Operating a food bank</td>
+<td class="gt_row gt_center" headers="General Assistance  t3010_code">0001-0004</td>
+<td class="gt_row gt_left" headers="General Assistance  legal_name">SIKHS SERVING CANADA ASSOCIATION</td>
+<td class="gt_row gt_right" headers="General Assistance  revenue_org_22">$1,628,072</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="General Assistance  t3010_category">Organizations Relieving Poverty</td>
+<td class="gt_row gt_left" headers="General Assistance  t3010_sub_category">Providing meals (including breakfast programs)</td>
+<td class="gt_row gt_center" headers="General Assistance  t3010_code">0001-0010</td>
+<td class="gt_row gt_left" headers="General Assistance  legal_name">ASK Foundation</td>
+<td class="gt_row gt_right" headers="General Assistance  revenue_org_22">$129,541</td>
+</tr>
+<tr class="even">
 <td class="gt_row gt_left" headers="General Assistance  t3010_category">Organizations Relieving Poverty</td>
 <td class="gt_row gt_left" headers="General Assistance  t3010_sub_category">Providing material assistance (clothing / computers / equipment)</td>
 <td class="gt_row gt_center" headers="General Assistance  t3010_code">0001-0013</td>
 <td class="gt_row gt_left" headers="General Assistance  legal_name">WORLD VISION CANADA-VISION MONDIALE CANADA</td>
 <td class="gt_row gt_right" headers="General Assistance  revenue_org_22">$438,744,594</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="General Assistance  t3010_category">Organizations Relieving Poverty</td>
+<td class="gt_row gt_left" headers="General Assistance  t3010_sub_category">Refugee (support and settlement assistance)</td>
+<td class="gt_row gt_center" headers="General Assistance  t3010_code">0001-0015</td>
+<td class="gt_row gt_left" headers="General Assistance  legal_name">NEWCOMER CENTRE OF PEEL</td>
+<td class="gt_row gt_right" headers="General Assistance  revenue_org_22">$10,289,946</td>
 </tr>
 <tr class="even gt_group_heading_row">
 <td colspan="5" id="Social Housing" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Social Housing</td>
@@ -10200,158 +10326,242 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_left" headers="Social Housing  legal_name">THE GOVERNING COUNCIL OF THE SALVATION ARMY IN CANADA/CONSEIL DE DIRECTION DE L'ARMÉE DU SALUT DU CANADA</td>
 <td class="gt_row gt_right" headers="Social Housing  revenue_org_22">$14,199,071</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="even">
+<td class="gt_row gt_left" headers="Social Housing  t3010_category">Organizations Relieving Poverty</td>
+<td class="gt_row gt_left" headers="Social Housing  t3010_sub_category">Providing low-cost housing</td>
+<td class="gt_row gt_center" headers="Social Housing  t3010_code">0001-0009</td>
+<td class="gt_row gt_left" headers="Social Housing  legal_name">Brampton Bramalea Christian Fellowship Residences Ltd.</td>
+<td class="gt_row gt_right" headers="Social Housing  revenue_org_22">$4,803,047</td>
+</tr>
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="Environment" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Environment</td>
 </tr>
-<tr class="odd gt_row_group_first">
+<tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Environment  t3010_category">Environment</td>
 <td class="gt_row gt_left" headers="Environment  t3010_sub_category">Conservation of nature / habitat group / ecosystem preservation etc.</td>
 <td class="gt_row gt_center" headers="Environment  t3010_code">0170-0001</td>
 <td class="gt_row gt_left" headers="Environment  legal_name">ACER ASSOCIATION FOR CANADIAN EDUCATIONAL RESOURCES</td>
 <td class="gt_row gt_right" headers="Environment  revenue_org_22">$308,852</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="Emergency Services" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Emergency Services</td>
 </tr>
-<tr class="odd gt_row_group_first">
-<td class="gt_row gt_left" headers="Emergency Services  t3010_category">Community Resource</td>
-<td class="gt_row gt_left" headers="Emergency Services  t3010_sub_category">Battered women's centre</td>
-<td class="gt_row gt_center" headers="Emergency Services  t3010_code">0160-0002</td>
-<td class="gt_row gt_left" headers="Emergency Services  legal_name">women &amp; children precious shelter</td>
-<td class="gt_row gt_right" headers="Emergency Services  revenue_org_22">$105,750</td>
-</tr>
-<tr class="even">
+<tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Emergency Services  t3010_category">Protective Health Care</td>
 <td class="gt_row gt_left" headers="Emergency Services  t3010_sub_category">Disaster relief</td>
 <td class="gt_row gt_center" headers="Emergency Services  t3010_code">0120-0002</td>
 <td class="gt_row gt_left" headers="Emergency Services  legal_name">TEAM RUBICON CANADA</td>
 <td class="gt_row gt_right" headers="Emergency Services  revenue_org_22">$2,535,199</td>
 </tr>
-<tr class="odd gt_group_heading_row">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Emergency Services  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="Emergency Services  t3010_sub_category">Battered women's centre</td>
+<td class="gt_row gt_center" headers="Emergency Services  t3010_code">0160-0002</td>
+<td class="gt_row gt_left" headers="Emergency Services  legal_name">women &amp; children precious shelter</td>
+<td class="gt_row gt_right" headers="Emergency Services  revenue_org_22">$105,750</td>
+</tr>
+<tr class="even gt_group_heading_row">
 <td colspan="5" id="Employment Programs" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Employment Programs</td>
 </tr>
-<tr class="even gt_row_group_first">
-<td class="gt_row gt_left" headers="Employment Programs  t3010_category">Community Resource</td>
-<td class="gt_row gt_left" headers="Employment Programs  t3010_sub_category">Employment training / rehabilitation</td>
-<td class="gt_row gt_center" headers="Employment Programs  t3010_code">0160-0017</td>
-<td class="gt_row gt_left" headers="Employment Programs  legal_name">INDUS COMMUNITY SERVICES</td>
-<td class="gt_row gt_right" headers="Employment Programs  revenue_org_22">$9,859,981</td>
-</tr>
-<tr class="odd">
+<tr class="odd gt_row_group_first">
 <td class="gt_row gt_left" headers="Employment Programs  t3010_category">Organizations Relieving Poverty</td>
 <td class="gt_row gt_left" headers="Employment Programs  t3010_sub_category">Providing work related clothing / career development tools / work integration (resume writing / interview tips)</td>
 <td class="gt_row gt_center" headers="Employment Programs  t3010_code">0001-0014</td>
 <td class="gt_row gt_left" headers="Employment Programs  legal_name">The Bartley Skills Development Program</td>
 <td class="gt_row gt_right" headers="Employment Programs  revenue_org_22">$45,009</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="even">
+<td class="gt_row gt_left" headers="Employment Programs  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="Employment Programs  t3010_sub_category">Employment training / rehabilitation</td>
+<td class="gt_row gt_center" headers="Employment Programs  t3010_code">0160-0017</td>
+<td class="gt_row gt_left" headers="Employment Programs  legal_name">INDUS COMMUNITY SERVICES</td>
+<td class="gt_row gt_right" headers="Employment Programs  revenue_org_22">$9,859,981</td>
+</tr>
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="Hospitals" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Hospitals</td>
 </tr>
-<tr class="odd gt_row_group_first">
+<tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Hospitals  t3010_category">Core Health Care</td>
 <td class="gt_row gt_left" headers="Hospitals  t3010_sub_category">Hospitals (diagnosing and treating health conditions)</td>
 <td class="gt_row gt_center" headers="Hospitals  t3010_code">0100-0006</td>
 <td class="gt_row gt_left" headers="Hospitals  legal_name">WILLIAM OSLER HEALTH SYSTEM</td>
 <td class="gt_row gt_right" headers="Hospitals  revenue_org_22">$985,092,000</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="Immigrant Services" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Immigrant Services</td>
 </tr>
-<tr class="odd gt_row_group_first">
+<tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Immigrant Services  t3010_category">Community Resource</td>
 <td class="gt_row gt_left" headers="Immigrant Services  t3010_sub_category">Immigrant services (jobs / language / etc.)</td>
 <td class="gt_row gt_center" headers="Immigrant Services  t3010_code">0160-0008</td>
 <td class="gt_row gt_left" headers="Immigrant Services  legal_name">The Jasmine House</td>
 <td class="gt_row gt_right" headers="Immigrant Services  revenue_org_22">$645,796</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="Indigenous Services" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Indigenous Services</td>
 </tr>
-<tr class="odd gt_row_group_first">
+<tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Indigenous Services  t3010_category">Community Resource</td>
 <td class="gt_row gt_left" headers="Indigenous Services  t3010_sub_category">Aboriginal programs and services (includes friendship centres)</td>
 <td class="gt_row gt_center" headers="Indigenous Services  t3010_code">0160-0001</td>
 <td class="gt_row gt_left" headers="Indigenous Services  legal_name">PEEL ABORIGINAL NETWORK INDIGENOUS FRIENDSHIP CENTRE</td>
 <td class="gt_row gt_right" headers="Indigenous Services  revenue_org_22">$1,892,169</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="Protection" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">Protection</td>
 </tr>
-<tr class="odd gt_row_group_first">
+<tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="Protection  t3010_category">Community Resource</td>
 <td class="gt_row gt_left" headers="Protection  t3010_sub_category">Rehabilitation of offenders</td>
 <td class="gt_row gt_center" headers="Protection  t3010_code">0160-0013</td>
 <td class="gt_row gt_left" headers="Protection  legal_name">THE GOVERNING COUNCIL OF THE SALVATION ARMY IN CANADA/CONSEIL DE DIRECTION DE L'ARMÉE DU SALUT DU CANADA</td>
 <td class="gt_row gt_right" headers="Protection  revenue_org_22">$1,775,775</td>
 </tr>
-<tr class="even gt_group_heading_row">
+<tr class="odd gt_group_heading_row">
 <td colspan="5" id="INVESTIGATE" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">INVESTIGATE</td>
 </tr>
-<tr class="odd gt_row_group_first">
-<td class="gt_row gt_left" headers="INVESTIGATE  t3010_category">Community Resource</td>
-<td class="gt_row gt_left" headers="INVESTIGATE  t3010_sub_category">Youth programs and services</td>
-<td class="gt_row gt_center" headers="INVESTIGATE  t3010_code">0160-0019</td>
-<td class="gt_row gt_left" headers="INVESTIGATE  legal_name">RESTORATION AND EMPOWERMENT FOR SOCIAL TRANSITION CENTRE</td>
-<td class="gt_row gt_right" headers="INVESTIGATE  revenue_org_22">$816,875</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="INVESTIGATE  t3010_category">Core Health Care</td>
-<td class="gt_row gt_left" headers="INVESTIGATE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="INVESTIGATE  t3010_code">0100-0099</td>
-<td class="gt_row gt_left" headers="INVESTIGATE  legal_name">ERINOAKKIDS CENTRE FOR TREATMENT AND DEVELOPMENT</td>
-<td class="gt_row gt_right" headers="INVESTIGATE  revenue_org_22">$123,306,758</td>
-</tr>
-<tr class="odd">
+<tr class="even gt_row_group_first">
 <td class="gt_row gt_left" headers="INVESTIGATE  t3010_category">Organizations Relieving Poverty</td>
 <td class="gt_row gt_left" headers="INVESTIGATE  t3010_sub_category">Orphanage</td>
 <td class="gt_row gt_center" headers="INVESTIGATE  t3010_code">0001-0007</td>
 <td class="gt_row gt_left" headers="INVESTIGATE  legal_name">TEAMWORK CHILDREN'S SERVICES INTERNATIONAL</td>
 <td class="gt_row gt_right" headers="INVESTIGATE  revenue_org_22">$46,668</td>
 </tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="INVESTIGATE  t3010_category">Core Health Care</td>
+<td class="gt_row gt_left" headers="INVESTIGATE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="INVESTIGATE  t3010_code">0100-0099</td>
+<td class="gt_row gt_left" headers="INVESTIGATE  legal_name">ERINOAKKIDS CENTRE FOR TREATMENT AND DEVELOPMENT</td>
+<td class="gt_row gt_right" headers="INVESTIGATE  revenue_org_22">$123,306,758</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="INVESTIGATE  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="INVESTIGATE  t3010_sub_category">Crime prevention / preservation of law &amp; order</td>
+<td class="gt_row gt_center" headers="INVESTIGATE  t3010_code">0160-0003</td>
+<td class="gt_row gt_left" headers="INVESTIGATE  legal_name">SAFE CITY MISSISSAUGA</td>
+<td class="gt_row gt_right" headers="INVESTIGATE  revenue_org_22">$544,560</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="INVESTIGATE  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="INVESTIGATE  t3010_sub_category">Youth programs and services</td>
+<td class="gt_row gt_center" headers="INVESTIGATE  t3010_code">0160-0019</td>
+<td class="gt_row gt_left" headers="INVESTIGATE  legal_name">RESTORATION AND EMPOWERMENT FOR SOCIAL TRANSITION CENTRE</td>
+<td class="gt_row gt_right" headers="INVESTIGATE  revenue_org_22">$816,875</td>
+</tr>
 <tr class="even gt_group_heading_row">
 <td colspan="5" id="EXCLUDE" class="gt_group_heading" data-quarto-table-cell-role="th" style="font-weight: bold" scope="colgroup">EXCLUDE</td>
 </tr>
 <tr class="odd gt_row_group_first">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Agriculture</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Agriculture / farm society or aid / safety</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0175-0001</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CALEDON AGRICULTURAL SOCIETY</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$111,700</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Organizations Relieving Poverty</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Humanitarian assistance (outside of Canada)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0001-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Muslim Hands</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$3,471,820</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Animal Welfare</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Rescuing domestic / holding stray / abandoned / surrendered animals</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0180-0004</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">FETCH AND RELEASH DOG RESCUE SOCIETY</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$696,368</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Organizations Relieving Poverty</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0001-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Food Banks Canada/Banques Alimentaires Canada</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$92,193,433</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Arts</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0190-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE PEEL MULTICULTURAL COUNCIL</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,044,652</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Preschool (early-childhood education / junior kindergarten)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Solid Families Foundation</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$33,875</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Catholic</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0005</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ROMAN CATHOLIC EPISCOPAL CORPORATION FOR THE DIOCESE OF TORONTO, IN CANADA</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$29,141,467</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Independent elementary schools (includes religious)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0004</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">MADANIYYA ACADEMY</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,402,696</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Community Resource</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0160-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CREDIT VALLEY CONSERVATION AUTHORITY</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$36,341,012</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Independent secondary school (including religious)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0008</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CATHOLIC GIRLS' SCHOOL OF GREATER TORONTO</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$5,268,455</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Complementary or Alternative Health Care</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Therapeutic programs for persons with disabilities</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0140-0005</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CRUISERS SPORTS FOR THE PHYSICALLY DISABLED</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$289,036</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Schools for students with intellectual disabilities (physical / communicative / mental or social learning difficulties)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0012</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">JOHN COOPER LEARNING CENTRE</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$222,125</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Vocational / technical school</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0013</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">KDF Charitable Foundation</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">College (includes religious)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0014</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">TORONTO INSTITUTE FOR CONTEMPORARY PSYCHOANALYSIS</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$284,709</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">The Peel District School Board</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$2,013,314,387</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of schools and education</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Tutoring programs or services</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0011-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">MasterED Innovator's Academy Inc.</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of schools and education</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Scholarships / bursaries / awards (scholastic achievement)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0011-0003</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">HELP ORPHANS AND PROMOTE EDUCATION FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,259,900</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of schools and education</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Literary / debating society</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0011-0004</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE PEEL LEARNING FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$377,795</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of schools and education</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0011-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ISNA SCHOOL BOARD (ISB)</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,297,372</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Education in the arts</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Music conservatory / school / society</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0012-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">MUSIC AT THE TOWERS CHILDREN'S PROGRAM</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$100,942</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Education in the arts</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Theatre / film / drama school / society / company</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0012-0003</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SAMPRADAYA DANCE CREATIONS</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$774,711</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Education in the arts</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Scholarships / bursaries / awards (studying performance arts)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0012-0004</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">AARON BROCK FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$34,813</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Education in the arts</td>
@@ -10362,80 +10572,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Educational organizations not elsewhere categorized</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Cadets</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0013-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">AIR CADET LEAGUE OF CANADA ONTARIO PROVINCIAL COMMITTEE</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$88,046</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Educational organizations not elsewhere categorized</td>
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
 <td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0013-0099</td>
 <td class="gt_row gt_left" headers="EXCLUDE  legal_name">GLORIA BAYLIS FOUNDATION</td>
 <td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,465,371</td>
 </tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations for specified community benefit</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0210-0001</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">TRILLIUM HEALTH PARTNERS FOUNDATION</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$40,496,675</td>
-</tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations Advancing Education</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations funding educational QDs in general</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0015-0002</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE MARIANO ELIA FOUNDATION</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$740,084</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations Advancing Religions</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations funding religious QDs in general</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0090-0002</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SPIRIT OF PENTECOST CHARITABLE PROPERTY CORPORATION</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$414,408</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Health Care Products</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0130-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Evidence-Based Social Enterprises Canada</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$965,173</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Islam</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0040-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">MUSLIM ASSOCIATION OF CANADA</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$43,871,120</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Judaism</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0050-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CHABAD OF MISSISSAUGA</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,188,458</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Organizations Relieving Poverty</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0001-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Food Banks Canada/Banques Alimentaires Canada</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$92,193,433</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Other Religions</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Sikhism</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0060-0005</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SRI GURU NANAK SIKH CENTRE BRAMPTON</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,571,289</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE BRAMPTON PUBLIC LIBRARY BOARD</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$21,074,594</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Relief of the Aged</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Nursing home / senior's home with care</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0150-0003</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">PARTNERS COMMUNITY HEALTH</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$0</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Research</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Environmental research (ecosystem / conservation / wildlife)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0014-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ENVIRONMENTAL RESEARCH AND EDUCATION FOUNDATION OF CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$66,723</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Research</td>
@@ -10445,42 +10599,497 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,924,887</td>
 </tr>
 <tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Research</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Sciences / physics / chemistry</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0014-0006</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CANADIAN ENERGY RESEARCH INSTITUTE</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$392,339</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations Advancing Education</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations for specified educational charities</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0015-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CANADIAN ACADEMY OF ENDODONTICS ENDOWMENT FUND</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,567</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations Advancing Education</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations funding educational QDs in general</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0015-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE MARIANO ELIA FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$740,084</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Adventist</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ONTARIO CONFERENCE OF THE SEVENTH-DAY ADVENTIST CHURCH</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$7,182,896</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Anglican</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ST JOHN THE BAPTIST ANGLICAN CHURCH</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$3,793,965</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Apostolic</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0003</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Christ Apostolic Church of God Mission Canada</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$7,579</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Baptist</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0004</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">BRAMALEA BAPTIST CHURCH</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$2,406,986</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Catholic</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0005</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ROMAN CATHOLIC EPISCOPAL CORPORATION FOR THE DIOCESE OF TORONTO, IN CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$29,141,467</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Church of Christ</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0006</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">YAHWEH MINISTRIES TORONTO INC.</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$246,038</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Gospel</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0007</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">LIFE CHURCH MISSISSAUGA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$219,706</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Jehovah's Witnesses</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0008</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Eldorado Congregation of Jehovah's Witnesses, Brampton, Ontario</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$76,695</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Mennonite / Brethren / Hutterite</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0009</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">BROOKSIDE CONSERVATIVE MENNONITE CHURCH</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$584,144</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Orthodox</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0010</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ALL SERBIAN SAINTS SERBIAN ORTHODOX CHURCH</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$832,281</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Pentecostal</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0011</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE PENTECOSTAL ASSEMBLIES OF CANADA/LES ASSEMBLEES DE LA PENTECOTE DU CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$27,709,675</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Presbyterian</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0012</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">LIGHT PRESBYTERIAN CHURCH</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,920,084</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Protestant</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0013</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CHURCH OF ST MARK - LUTHERAN</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$420,169</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Salvation Army Temples</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0014</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE GOVERNING COUNCIL OF THE SALVATION ARMY IN CANADA/CONSEIL DE DIRECTION DE L'ARMÉE DU SALUT DU CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$3,450,435</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">United</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0015</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CHRIST FIRST</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$950,714</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Christianity</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0030-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">COPTIC ORTHODOX PATRIARCHATE OF ALEXANDRIA, THE CHURCH OF THE VIRGIN MARY AND ST ATHANASIUS</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$17,953,297</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Islam</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Sunni</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0040-0007</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Al-Mawrid Institute Canada</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$49,475</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Islam</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0040-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">MUSLIM ASSOCIATION OF CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$43,871,120</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Judaism</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0050-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CHABAD OF MISSISSAUGA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,188,458</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Other Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Baha'i</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0060-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE SPIRITUAL ASSEMBLY OF THE BAHA'IS OF MISSISSAUGA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$126,257</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Other Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Buddhism</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0060-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">INTERNATIONAL BUDDHIST PROGRESS SOCIETY OF TORONTO</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$3,493,416</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Other Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Hinduism</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0060-0003</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SAI DHAM CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,749,643</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Other Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Jainism</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0060-0004</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SRI JAIN MANDIR</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$115,832</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Other Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Sikhism</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0060-0005</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SRI GURU NANAK SIKH CENTRE BRAMPTON</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,571,289</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Other Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0060-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">DADA BHAGWAN AKRAM VIGNAN CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$84,756</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Convents and Monasteries</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE SISTERS OF SAINT KOSMAS AITOLOS GREEK ORTHODOX MONASTERY</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$878,958</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Mission / Missionary organization</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0005</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CANADIAN BAPTIST MINISTRIES</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$7,912,367</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Fund / endowment for specific faith based organization</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0006</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">LIGHTHOUSE TABERNACLE CHURCH (APOSTOLIC)</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$220,516</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Prayer fellowships / ministries / circles</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0012</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Bethel Fellowship Trust Canada Inc.</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$100,980</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Providing and maintaining facilities / title-holding entities</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0013</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">HORIZONS ENDOWMENT FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$216,373</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Religious education classes (bible study)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0014</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">GCBI North</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$129,945</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Retreats - marriage encounter / spiritual / youth</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0016</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Emmaus Formation Centre</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$218,200</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Facilitator organization supporting and enhancing the work of groups involved in the advancement of religion</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0018</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CANADIAN RELIGIOUS ADMINISTRATIVE SERVICES INC./SERVICES ADMINISTRATIFS RELIGIEUX CANADIENS INC.</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,222,768</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Youth ministries / camps</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0019</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Royal Youth For Christ International Fellowship Inc.</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$102,690</td>
+</tr>
+<tr class="odd">
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of Religion</td>
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
 <td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0070-0099</td>
 <td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE CHRISTIAN AND MISSIONARY ALLIANCE IN CANADA/ L'ALLIANCE CHRETIENNE ET MISSIONNAIRE AU CANADA</td>
 <td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$23,027,026</td>
 </tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations Advancing Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations for specified religious charities</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0090-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE FREE METHODIST FOUNDATION IN CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$131,379</td>
+</tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Support of schools and education</td>
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0011-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ISNA SCHOOL BOARD (ISB)</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,297,372</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations Advancing Religions</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations funding religious QDs in general</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0090-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SPIRIT OF PENTECOST CHARITABLE PROPERTY CORPORATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$414,408</td>
 </tr>
 <tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Supportive Health Care</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Voluntary Association for specific hospital / home</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0110-0016</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Dera Sacha Sauda</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$8,760</td>
+</tr>
+<tr class="odd">
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Supportive Health Care</td>
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
 <td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0110-0099</td>
 <td class="gt_row gt_left" headers="EXCLUDE  legal_name">Penny Appeal Canada</td>
 <td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$13,021,696</td>
 </tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Teaching Institutions</td>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Health Care Products</td>
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
-<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0010-0099</td>
-<td class="gt_row gt_left" headers="EXCLUDE  legal_name">The Peel District School Board</td>
-<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$2,013,314,387</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0130-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">Evidence-Based Social Enterprises Canada</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$965,173</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Complementary or Alternative Health Care</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Therapeutic programs for persons with disabilities</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0140-0005</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CRUISERS SPORTS FOR THE PHYSICALLY DISABLED</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$289,036</td>
 </tr>
 <tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Relief of the Aged</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Nursing home / senior's home with care</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0150-0003</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">PARTNERS COMMUNITY HEALTH</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$0</td>
+</tr>
+<tr class="odd">
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Upholding Human Rights</td>
 <td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
 <td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0155-0099</td>
 <td class="gt_row gt_left" headers="EXCLUDE  legal_name">INTERNATIONAL JUSTICE MISSION CANADA / MISSION INTERNATIONALE DE JUSTICE-CANADA</td>
 <td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,544,849</td>
 </tr>
-</tbody><tfoot class="gt_sourcenotes">
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Crisis / distress phone line</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0160-0005</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">NASEEHA YOUTH HELPLINE</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$591,562</td>
+</tr>
 <tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Legal assistance and services (mediation)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0160-0009</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ASSOCIATED YOUTH SERVICES OF PEEL</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$8,917,630</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Military / family / veterans' support</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0160-0010</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">LORNE SCOTS (PEEL DUFFERIN &amp; HALTON REGIMENT) TRUST</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$71,624</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Facilitator organization supporting and enhancing the work of groups involved in the delivery of charitable programs</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0160-0015</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CoSA Canada INC</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,672,776</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Community Resource</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0160-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CREDIT VALLEY CONSERVATION AUTHORITY</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$36,341,012</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Agriculture</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Agriculture / farm society or aid / safety</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0175-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">CALEDON AGRICULTURAL SOCIETY</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$111,700</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Animal Welfare</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Animal shelter / neuter / adoption</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0180-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">BOXER RESCUE ONTARIO</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$143,108</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Animal Welfare</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Wildlife protection organization</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0180-0003</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">National Wildlife Centre</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$251,332</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Animal Welfare</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Rescuing domestic / holding stray / abandoned / surrendered animals</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0180-0004</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">FETCH AND RELEASH DOG RESCUE SOCIETY</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$696,368</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Animal Welfare</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0180-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ANIMAL TRACKERS INC</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$72,296</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Arts</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Arts festival</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0190-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE FOLD FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$471,859</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Arts</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Music (band / choral / gospel / jazz / opera / orchestral / etc.)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0190-0007</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE CANADIAN ARABIC ORCHESTRA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,670,050</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Arts</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Theatre / performing arts (drama / comedy / musical / puppetry / etc.)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0190-0009</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ZAMAR MUSIC INC.</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$379,768</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Arts</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0190-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE PEEL MULTICULTURAL COUNCIL</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$4,044,652</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Camps / recreation</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0005</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">DIXIE BLOOR NEIGHBOURHOOD DROP-IN CENTRE</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$10,229,283</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Cemetery (secular)</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0006</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">BETHESDA COMMUNITY CEMETERY</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$61,654</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Community Centre / hall</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0007</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">KALAYAAN CULTURAL COMMUNITY CENTRE</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$242,174</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Heritage / Historical site</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0009</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE RIVERWOOD CONSERVANCY</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$1,291,062</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Library</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0010</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE TOWN OF CALEDON PUBLIC LIBRARY BOARD</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$8,072,879</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Memorial</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0011</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SHREE GANESH YAG PARIWAR</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$123,075</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Museum</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0012</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">SIKH HERITAGE MUSEUM OF CANADA</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$36,202</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Public Amenities</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Other</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0200-0099</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">THE BRAMPTON PUBLIC LIBRARY BOARD</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$21,074,594</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations for specified community benefit</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0210-0001</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">TRILLIUM HEALTH PARTNERS FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$40,496,675</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_category">Foundations</td>
+<td class="gt_row gt_left" headers="EXCLUDE  t3010_sub_category">Foundations funding community benefit QDs in general</td>
+<td class="gt_row gt_center" headers="EXCLUDE  t3010_code">0210-0002</td>
+<td class="gt_row gt_left" headers="EXCLUDE  legal_name">ALEX &amp; ANNIE THOMAS FAMILY FOUNDATION</td>
+<td class="gt_row gt_right" headers="EXCLUDE  revenue_org_22">$29,999,900</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="even">
 <td colspan="5" class="gt_sourcenote"><button class="btn btn-default" onclick="
     async function downloadFile(event) {
       event.preventDefault();
