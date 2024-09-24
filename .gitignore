@@ -4,5 +4,7 @@
 .httr-oauth
 .DS_Store
 .quarto
-*_cache/
+*_cache/*
 data-raw/
+briefs/
+local/

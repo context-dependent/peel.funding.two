@@ -10,7 +10,25 @@ library(peel.funding.two)
 fetch_clustering <- memoise::memoise(function() {
   googlesheets4::gs4_auth()
   googlesheets4::gs4_find("t3010-fir-clusters") |> 
-    googlesheets4::read_sheet(sheet = 1)
+    googlesheets4::read_sheet(sheet = "t3010") |> 
+    dplyr::mutate(analysis_category = fct_relevel(
+      analysis_category, 
+      "Public Health", 
+      "Childcare", 
+      "Senior Support", 
+      "General Assistance", 
+      "Social Housing", 
+      "Legal Aid", 
+      "Environment", 
+      "Emergency Services", 
+      "Employment Programs", 
+      "Hospitals", 
+      "Immigrant Services", 
+      "Indigenous Services", 
+      "Protection",
+      "INVESTIGATE", 
+      "EXCLUDE"
+    ))
 })
 
 dl_button <- function(x, name) {
@@ -313,7 +331,8 @@ charities <- t3010 |>
 
 charities |> 
   filter(data_year == 2022) |> 
-  arrange(category_code, sub_category_code, desc(revenue_total_cd23)) |> 
+  arrange(category_code, sub_category_code, desc(revenue_total_cd23)) |>
+  mutate(category = fct_inorder(glue::glue("{category} [{category_code}]")), sub_category = fct_inorder(sub_category)) |>
   group_by(sub_category_code, category, sub_category) |> 
   summarize(
     revenue_total_2022 = sum(revenue_total, na.rm = TRUE),
@@ -465,29 +484,63 @@ charities |>
 clusters <- fetch_clustering() |> 
   mutate(across(matches("code|line"), str_trim))
 
-charities |> 
-  count(category_code, sub_category_code) 
+clusters |> 
+  count(analysis_category)
 
-t3010_clusters <- clusters |> 
-  filter(data_source == "cra") |> 
-  select(-slc_line) 
+ch_clustered <- charities |> 
+  filter(data_year <= 2022) |> 
+  left_join(clusters, by = c("category_code", "sub_category_code", "category", "sub_category")) 
 
-missing <- t3010_clusters |> 
-  anti_join(charities, by = c("category_code", "sub_category_code"))  |> 
-  mutate(in_data = "Not in T3010 data")
 
-present <- t3010_clusters |> 
-  semi_join(charities, by = c("category_code", "sub_category_code")) |> 
-  mutate(in_data = "In T3010 data")
+dplt_cluster_sum <- ch_clustered |> 
+  filter(data_year == 2022) |> 
+  arrange(analysis_category) |> 
+  group_by(analysis_category) |> 
+  summarize(
+    n_orgs = n(),
+    total_revenue_on_22 = sum(revenue_total, na.rm = TRUE), 
+    total_revenue_peel_22 = sum(revenue_total_cd23 * (municipality_desc == "Peel R"), na.rm = TRUE)
+  )
 
-bind_rows(missing, present) |> 
-  select(-data_source) |> 
-  group_by(in_data) |> 
-  gt(groupname_col = "in_data", rowname_col = "cluster") |> 
-  gt::tab_stub_indent(rows = everything()) |> 
+dplt_cluster_sum |> 
+  gt(rowname_col = "analysis_category") |> 
+  fmt_currency(columns = c(matches("revenue")), decimals = 0) |> 
+  fmt_number(columns = c(n_orgs), decimals = 0) |> 
+  tab_source_note(
+    dl_button(dplt_cluster_sum, "tbl-charities-clusters")
+  )
+```
+
+### Example Organizations in Peel by Cluster
+
+```{r ch-peel-orgs-by-cluster}
+dplt_peel_orgs <- ch_clustered |> 
+  filter(data_year == 2022, municipality_desc == "Peel R") |>
+  group_by(
+    analysis_category, 
+    t3010_category = category, 
+    t3010_sub_category = sub_category,
+    t3010_code = glue::glue("{category_code}-{sub_category_code}"),
+    legal_name
+  ) |> 
+  summarize(
+    revenue_org_22 = sum(revenue_total, na.rm = TRUE),
+    .groups = "drop"
+  ) 
+
+dplt_peel_orgs |> 
+  arrange(analysis_category, desc(revenue_org_22)) |> 
+  group_by(analysis_category, t3010_category) |> 
+  slice(1) |> 
+  group_by(analysis_category) |> 
+  gt(groupname_col = "analysis_category") |>
+  gt::fmt_currency(columns = c(revenue_org_22), decimals = 0) |> 
   gt::tab_style(
     style = gt::cell_text(weight = "bold"),
     locations = gt::cells_row_groups(groups = everything())
+  ) |> 
+  tab_source_note(
+    dl_button(dplt_peel_orgs, "tbl-charities-peel-orgs")
   )
 
 ```
