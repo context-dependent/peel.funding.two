@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.551">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Peel Funding Analysis 2 - 2&nbsp; Senior Supports</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./public-health.html" rel="next">
+<link href="./exploration.html" rel="prev">
+<link href="./favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
+
+<script src="site_libs/reactwidget-2.0.0/react-tools.umd.cjs"></script>
+
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+
+<script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
+
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./senior-supports.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Senior Supports</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./blueprint-logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Peel Funding Analysis 2</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exploration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./senior-supports.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Senior Supports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./public-health.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Public Health</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#snapshot" id="toc-snapshot" class="nav-link active" data-scroll-target="#snapshot"><span class="header-section-number">2.1</span> 2022 Snapshot</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Senior Supports</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">load_all</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> fir_data <span class="sc">|&gt;</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(marsyear <span class="sc">&lt;</span> <span class="dv">2023</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ut_number) <span class="sc">|&gt;</span> </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">min</span>(population) <span class="sc">&gt;</span> <span class="fl">5e4</span>, service <span class="sc">==</span> <span class="st">"Senior Support"</span>, cost_payer <span class="sc">==</span> <span class="st">"ontario"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(marsyear, ut_number, ut_name) <span class="sc">|&gt;</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_real =</span> <span class="fu">sum</span>(amount), </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">population =</span> <span class="fu">first</span>(population),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">per_capita_real =</span> <span class="fu">sum</span>(amount_pc),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">per_capita_cd23 =</span> <span class="fu">sum</span>(amount_pc_cd23)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="snapshot" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="snapshot"><span class="header-section-number">2.1</span> 2022 Snapshot</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reactable)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    marsyear, ut_name, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    total_real, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    population, </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    per_capita_real, </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    per_capita_cd23</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(marsyear, <span class="fu">desc</span>(per_capita_cd23)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  reactable<span class="sc">::</span><span class="fu">reactable</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">list</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">marsyear =</span> <span class="fu">colDef</span>(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">filterable =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">ut_name =</span> <span class="fu">colDef</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">filterable =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      ), </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">total_real =</span> <span class="fu">colDef</span>(</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">format =</span> <span class="fu">colFormat</span>(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>          <span class="at">currency =</span> <span class="st">"USD"</span>, </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>          <span class="at">separators =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">per_capita_real =</span> <span class="fu">colDef</span>(</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">format =</span> <span class="fu">colFormat</span>(</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">currency =</span> <span class="st">"USD"</span>, </span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>          <span class="at">separators =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">per_capita_cd23 =</span> <span class="fu">colDef</span>(</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">format =</span> <span class="fu">colFormat</span>(</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>          <span class="at">currency =</span> <span class="st">"USD"</span>, </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>          <span class="at">separators =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>      ), </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">population =</span> <span class="fu">colDef</span>(</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">format =</span> <span class="fu">colFormat</span>(</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>          <span class="at">separators =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    ), </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">defaultPageSize =</span> <span class="dv">23</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-seniors-2022" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-seniors-2022-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: Snapshot of Senior Support Funding in 2022 per FIR
+</figcaption>
+<div aria-describedby="tbl-seniors-2022-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-40c4766bc356c06446ee" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-40c4766bc356c06446ee">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"marsyear":[2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022],"ut_name":["Middlesex Co","Renfrew Co","Bruce Co","Grey Co","Dufferin Co","Peterborough Co","Chatham-Kent M","Huron Co","Lambton Co","Wellington Co","Lanark Co","Greater Sudbury C","Oxford Co","Muskoka D","Niagara R","Essex Co","Kawartha Lakes C","Simcoe Co","Leeds and Grenville UCo","Stormont, Dundas and Glengarry UCo","Northumberland Co","Prescott and Russell UCo","Halton R","Durham R","Toronto C","Hamilton C","Waterloo R","Ottawa C","Peel R","Vaughan C","Middlesex Co","Renfrew Co","Bruce Co","Grey Co","Peterborough Co","Dufferin Co","Chatham-Kent M","Huron Co","Wellington Co","Lambton Co","Greater Sudbury C","Muskoka D","Oxford Co","Lanark Co","Niagara R","Essex Co","Leeds and Grenville UCo","Kawartha Lakes C","Stormont, Dundas and Glengarry UCo","Simcoe Co","Northumberland Co","Prescott and Russell UCo","Durham R","Halton R","Toronto C","Hamilton C","Ottawa C","Waterloo R","Peel R","Vaughan C","Middlesex Co","Renfrew Co","Bruce Co","Peterborough Co","Grey Co","Dufferin Co","Chatham-Kent M","Huron Co","Wellington Co","Greater Sudbury C","Lambton Co","Muskoka D","Oxford Co","Lanark Co","Niagara R","Essex Co","Leeds and Grenville UCo","Stormont, Dundas and Glengarry UCo","Kawartha Lakes C","Simcoe Co","Northumberland Co","Prescott and Russell UCo","Durham R","Halton R","Toronto C","Hamilton C","Waterloo R","Ottawa C","Peel R","Vaughan C","Middlesex Co","Renfrew Co","Bruce Co","Peterborough Co","Grey Co","Dufferin Co","Huron Co","Chatham-Kent M","Wellington Co","Lambton Co","Greater Sudbury C","Lanark Co","Oxford Co","Muskoka D","Niagara R","Essex Co","Leeds and Grenville UCo","Simcoe Co","Stormont, Dundas and Glengarry UCo","Kawartha Lakes C","Northumberland Co","Prescott and Russell UCo","Durham R","Halton R","Toronto C","Ottawa C","Hamilton C","Waterloo R","Peel R","Vaughan C","Middlesex Co","Renfrew Co","Bruce Co","Grey Co","Peterborough Co","Huron Co","Dufferin Co","Chatham-Kent M","Lambton Co","Wellington Co","Greater Sudbury C","Lanark Co","Oxford Co","Muskoka D","Essex Co","Leeds and Grenville UCo","Niagara R","Kawartha Lakes C","Stormont, Dundas and Glengarry UCo","Simcoe Co","Northumberland Co","Prescott and Russell UCo","Durham R","Halton R","Toronto C","Hamilton C","Ottawa C","Waterloo R","Peel R","Vaughan C","Middlesex Co","Renfrew Co","Bruce Co","Grey Co","Peterborough Co","Chatham-Kent M","Huron Co","Dufferin Co","Greater Sudbury C","Lanark Co","Lambton Co","Wellington Co","Essex Co","Leeds and Grenville UCo","Muskoka D","Niagara R","Simcoe Co","Oxford Co","Kawartha Lakes C","Stormont, Dundas and Glengarry UCo","Prescott and Russell UCo","Northumberland Co","Durham R","Halton R","Toronto C","Hamilton C","Ottawa C","Waterloo R","Peel R","Vaughan C","Middlesex Co","Renfrew Co","Bruce Co","Grey Co","Lanark Co","Peterborough Co","Huron Co","Chatham-Kent M","Lambton Co","Wellington Co","Dufferin Co","Leeds and Grenville UCo","Muskoka D","Essex Co","Oxford Co","Niagara R","Greater Sudbury C","Stormont, Dundas and Glengarry UCo","Kawartha Lakes C","Northumberland Co","Prescott and Russell UCo","Simcoe Co","Durham R","Halton R","Toronto C","Hamilton C","Ottawa C","Peel R","Waterloo R","Vaughan C","Middlesex Co","Renfrew Co","Bruce Co","Muskoka D","Peterborough Co","Grey Co","Huron Co","Greater Sudbury C","Chatham-Kent M","Lambton Co","Wellington Co","Dufferin Co","Leeds and Grenville UCo","Lanark Co","Oxford Co","Essex Co","Niagara R","Kawartha Lakes C","Northumberland Co","Stormont, Dundas and Glengarry UCo","Durham R","Simcoe Co","Prescott and Russell UCo","Halton R","Toronto C","Hamilton C","Ottawa C","Waterloo R","Peel R","Vaughan C"],"total_real":[19518608,17350562,10937870,15333150,9478502,8515139,15596158,8443707,16960931,12728220,7337577,20573104,11240150,7636789,53801669,20755093,7889447,28164492,5889919,6387294,6971658,6694543,33036360,39031494,140243049,21086038,20095069,33536512,39849530,15776397,19932038.76,17946785,10967591,15615709,9009038,9571575,15707911,8586168,13373684,17190176,21540041,7754354.25,11351861,7599694,53336335,20655175,6358179,7676566,6487882,29399655,7127988,6681523,41923108,34068485,140676369,21470591,34586053,20655497,40684878,15541842,20370860,17999813,11060115,9529624,15883824,9807189,16024578,8886037,13699073,22192416,17309312,7821120,11464917,7538126,53842376,20730570,6527303,6586821,7535262,30252628,7310895,6700331,43224843,34854145,145882808,21766682,21534053,34362957,40952003,16035672,20956320,18349809,11308311,9960404,16623832,10110742,9464706,16164862,14309895,17874642,22548727,8065146,11857509,8117576,56148680,21461928,6676370,33511507,6873923,7764593,7580637,7010783,44274264,36456736,154327701,36158448,22151405,23158927,42067407,17402417,21342590,18669164,11565043,16897452,9933676,9747262,10086414,16256387,18386349,14299053,23108802,8234104,12140299,8323894,22083343,6989679,57000169,8656597,7018868,34586610,7426269,7306350,45033675,37044479,162914179,22782951,36264418,23278349,43092954,17135015,24238560,21990002,15004927,20526464,11888823,20430483,11772092,11791834,29960408,11018499,21966520,17021798,28316867,8712650,9656781,72431088,48491390,13736917,9781237,8275593,9465205,9150866,61287399,42811670,198250718,27228006,46915201,26697069,55499790,21784362,25406001,22167032,16929261,21723314,13408205,12823641,12157300,20426887,24639846,19213014,12391317,9868366,10839062,30383037,14354772,74727335,23926465,9158897,10830007,11429065,9510631,49384608,63343911,49377547,201903269.01,31558200,51595767,60781350,25264670,31114499,31800003,24879601,19460515,16779357,15992795,24738183,13787239,36299190,22441839,27372874,22051679,13743156,10840611,12323121,17942649,33762358,84204227,12157573,12870319,9109731,81865297,57154575,9699800,54373062,224685275.2,34275063,53622968,30750046,67959271,36812026],"population":[76004,77841,61119,92568,58300,56235,104075,57579,126199,95010,56589,161900,89311,61620,449098,176642,73214,279766,59770,64824,82126,88104,543557,660756,2826498,550700,575000,960754,1443000,1166321,76764,77841,61119,93830,56235,61735,102042,59297,96640,126638,161531,60599,89177,59918,447888,181530,58797,75423,64824,321455,82126,89333,673070,556210,2876095,558397,968580,583500,1438000,1186907,74579,77841,61119,55783,93830,61740,102042,59297,98400,161531,126638,61205,90013,59918,458986,181530,58341,65353,75423,305516,86343,89333,682250,569787,2929886,563480,594100,979173,1479000,1206543,73887,76315,61119,55783,93830,62000,59297,102042,97610,126638,161531,59918,89404,61680,472448,181530,57573,305516,65353,75423,89501,89333,691580,583363,2956024,934243,572575,601220,1484400,1196559,74094,76315,61119,93830,56391,59297,63000,102042,126638,99200,161531,59918,90892,62367,181530,57708,479183,75423,65353,322194,90264,89333,699460,596940,2965713,579000,934243,617870,1495000,1202535,74094,76315,61119,93830,56391,102042,59297,63000,161531,59918,126638,100980,181530,56362,63286,481727,322949,92055,75423,65353,89333,91025,711060,610517,2988408,578000,1018001,623930,1501600,1213602,80600,76315,72017,100905,66506,64000,61366,103988,128154,102250,66257,56033,66674,192970,93118,484840,161531,65353,79247,91800,95639,533170,713680,624094,2974293,584000,1046443,1515556,632230,1228180,82854,75251,72017,64717,64000,100905,61366,166004,103988,128154,103910,66257,56033,66506,99603,192970,496059,79247,92718,66792,743095,533169,95639,637054,3025647,592000,1067310,647540,1515556,1239424],"per_capita_real":[256.810273143519,222.897470484706,178.960225134574,165.642014519056,162.581509433962,151.420627722948,149.854989190488,146.645599958318,134.39829951109,133.967161351437,129.664369400414,127.072909203212,125.8540381364,123.933609217786,119.799395677558,117.498063880617,107.758721009643,100.671604126306,98.5430650828175,98.5328582006664,84.889779119889,75.984552347226,60.7780968693256,59.0709641683163,49.6172468545883,38.2895187942619,34.9479460869565,34.9064505586237,27.6157519057519,13.526633748342,259.653467250274,230.556968692591,179.446505996499,166.425546200575,160.203396461279,155.042925406981,153.935742145391,144.79936590384,138.386630794702,135.742636491416,133.349270418681,127.961752669186,127.295838613095,126.8349077072,119.084090218983,113.783809838594,108.137813153732,101.780173156729,100.084567444156,91.4580734472943,86.793317585174,74.7934469904738,62.2864011172686,61.2511191816041,48.9122817570352,38.4504053567623,35.7079983067996,35.3993093401885,28.2926828929068,13.0944058801574,273.144719022781,231.238203517427,180.960339665243,170.833838266138,169.283001172333,158.846598639456,157.039042747104,149.856434558241,139.218221544715,137.387968872848,136.683396768742,127.785638428233,127.369568840056,125.807370072432,117.307229414405,114.199140637911,111.881918376442,100.788349425428,99.9066862893282,99.0214195001244,84.6727007400716,75.0039850894966,63.3563107365335,61.170481250011,49.7912915383056,38.6290232128913,36.2465123716546,35.0938567546287,27.6889810682894,13.2905930414415,283.626619026351,240.448260499247,185.021204535415,178.556262660667,177.169689864649,163.076483870968,159.615258782063,158.413809999804,146.602755865178,141.147538653485,139.593805523398,134.603057511933,132.628394702698,131.607911802853,118.846264562449,118.227995372666,115.963559307314,109.688222548083,105.181445381237,102.947283984991,84.698908392085,78.4792070119665,64.019005754938,62.4940834437563,52.2078646858077,38.7034722229655,38.6873422695717,38.5198878946143,28.3396705739693,14.5437182788312,288.047480227819,244.632955513333,189.221731376495,180.085814771395,176.157117270486,164.380356510447,160.10180952381,159.310744595363,145.188245234448,144.143679435484,143.061096631606,137.422877933175,133.568399859174,133.466320329662,121.651203657798,121.12149095446,118.95281969519,114.773968152951,107.399323672976,107.347157302743,82.2727665514491,81.7878051783775,64.3834886912761,62.0572905149596,54.9325504524544,39.348792746114,38.8169009561752,37.6751565863369,28.8247183946488,14.249077989414,327.132561340999,288.147834632772,245.503476823901,218.762272194394,210.828376868649,200.216410889634,198.527615225054,187.171968253968,185.477759686995,183.89297039287,173.459151281606,168.566032877798,155.990012670082,154.583762109223,152.589530069842,150.357127584711,150.151850601798,149.225104557058,129.685069541121,126.629121845975,105.954182664861,100.531348530623,86.1915998649903,70.1236329209506,66.3399100792127,47.107276816609,46.0856138648194,42.788564422291,36.9604355354289,17.9501698250332,315.210930521092,290.467562078228,235.073121624061,215.284812447351,201.608952575707,200.369390625,198.111332007952,196.435040581606,192.267475069058,187.902337408313,187.018986673106,176.117038173933,162.568047514773,157.449536197336,154.15679030907,154.127825674449,148.123053779151,140.145012470736,136.661413050336,124.499618736383,99.4430201068602,92.6245062550406,88.7567411164668,79.1187657628498,67.8827771877216,54.0380136986301,49.3058551684134,40.1049845733183,39.9612008288123,25.3338264749467,383.807697878195,330.621533268661,270.221128344696,259.272787675572,249.887421875,245.163103909618,224.672277808559,218.664550251801,215.811814824787,213.593598327013,212.219026080262,207.421947869659,193.468331161994,185.293372026584,180.141652359869,174.961693527491,169.746395086068,153.413668656227,138.811438987036,136.389552641035,110.16800947389,107.19785846514,101.42096843338,85.3507897289712,74.2602409335921,57.8970658783784,50.2412307576993,47.4874849430151,44.841148067112,29.7009142956728],"per_capita_cd23":[319.904162856173,277.659564881655,222.92769017941,206.337423109688,202.525004294896,188.622084926467,186.671795796942,182.673914547764,167.417661949842,166.880600521766,161.520686215429,158.292548591442,156.774221760178,154.381976317604,149.232057252971,146.365327612668,134.233194852671,125.404894622015,122.753409957952,122.740695419511,105.745745261589,94.6526566523137,75.7102352681473,73.5836892740329,61.8073553832273,47.6965983724439,43.5340584301413,43.4823681605462,34.4004696031619,16.8498961998577,317.710140729517,282.107871484304,219.569471870812,203.637117825993,196.023739540516,189.709423763207,188.3546821779,177.175477015724,169.328899823587,166.093727148711,163.165221398957,156.573092895912,155.758285180403,155.194293393467,145.710448093698,139.225062616692,132.316661121799,124.537497918064,122.462766795587,111.907449931269,106.199687746855,91.5167312057687,76.2131985914459,74.946434958524,59.8487210088009,47.0476432545735,43.6920534409337,43.3143438110094,34.6187260994935,16.0222221525134,328.643418566455,278.222159956145,217.728627027097,205.544580233784,203.678637498478,191.121722548003,188.946899802619,180.304898896079,167.505168757743,165.303037605163,164.455307560268,153.749665038367,153.249056671091,151.369443749014,141.142208552434,137.402605149632,134.614559866121,121.266952644545,120.206149462596,119.14101042206,101.876858282406,90.2436120826619,76.229313979438,73.599358410741,59.9080967940038,46.4778315685053,43.6112320953873,42.2243750338102,33.3149453793595,15.9910319611582,333.418847699866,282.660288453559,217.502704887187,209.902806549984,208.272813196443,191.705466594982,187.636604212692,186.224234421992,172.339684117065,165.926773217096,164.100273604172,158.233372052917,155.912046217171,154.71241187491,139.710386563412,138.983576782534,136.321606385709,128.944599395413,123.646632459277,121.020251617912,99.5682723098066,92.2566677985117,75.2578978763604,73.4652669816602,61.3732453750939,45.4980817909973,45.4791201346743,45.282268213891,33.3148571858439,17.0969488211149,332.459164452035,282.35090938157,218.396281959635,207.851773121603,203.317341896918,189.724818750604,184.78659761039,183.873564852975,167.573632863323,166.368014010264,165.118516621352,158.61098711269,154.162218601097,154.044400264126,140.407607421763,139.796222650712,137.293181713648,132.470027242715,123.958346668373,123.89813719233,94.9577312851998,94.3979976858801,74.3102520385856,71.6253963979934,63.4021509585783,45.4156611549694,44.8017613217819,43.4839807291031,33.2689658853147,16.4460267412364,375.115155237114,330.412293036278,281.513018583476,250.849512985913,241.751903244614,229.583413353937,227.646911388844,214.62566012937,212.682951317385,210.865710992403,198.901497892997,193.290674983428,178.87005065565,177.257536464838,174.970797847427,172.410954824376,172.175568573015,171.112890846858,148.706795781618,145.202612983788,121.495150208912,115.276914825216,98.8338648740893,80.4091079808877,76.0704026703111,54.0167979103746,52.8452812163789,49.0646327587975,42.3816554875185,20.5830343297166,349.329432078892,321.907835906528,260.517488838956,238.587288654991,223.431150654782,222.057418241533,219.554946855182,217.697213270257,213.078549535331,208.240928398738,207.261963582556,195.179985741642,180.164449305828,174.49190917959,170.842755740569,170.810655967424,164.15592622033,155.31433993789,151.453674937768,137.975485289553,110.206754825131,102.6502035103,98.3637906088218,87.6825986491918,75.2304241598563,59.8871003769037,54.6427319499106,44.445957065542,44.2866101364002,28.0759655137852,398.366786483124,343.16309568173,280.471504697863,269.107857450054,259.36647384933,254.462946961781,233.194836417385,226.959215990588,223.998266924093,221.69590617722,220.269191883175,215.290144714944,200.807221421899,192.32215919306,186.97501785161,181.598566140045,176.185434271805,159.23315379819,144.077013520226,141.563257057765,114.347044496444,111.264225888932,105.268199413848,88.5884259646025,77.077176168483,60.093292052967,52.1470459205158,49.2888414679954,46.5421203286506,30.8275676829515]},"columns":[{"id":"marsyear","name":"marsyear","type":"numeric","filterable":true},{"id":"ut_name","name":"ut_name","type":"character","filterable":true},{"id":"total_real","name":"total_real","type":"numeric","format":{"cell":{"separators":true,"currency":"USD"},"aggregated":{"separators":true,"currency":"USD"}}},{"id":"population","name":"population","type":"numeric","format":{"cell":{"separators":true},"aggregated":{"separators":true}}},{"id":"per_capita_real","name":"per_capita_real","type":"numeric","format":{"cell":{"separators":true,"currency":"USD"},"aggregated":{"separators":true,"currency":"USD"}}},{"id":"per_capita_cd23","name":"per_capita_cd23","type":"numeric","format":{"cell":{"separators":true,"currency":"USD"},"aggregated":{"separators":true,"currency":"USD"}}}],"defaultPageSize":23,"dataKey":"ed4d434c45f38824138c83460209e0a5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./exploration.html" class="pagination-link" aria-label="Exploratory Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Exploratory Analysis</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./public-health.html" class="pagination-link" aria-label="Public Health">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Public Health</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

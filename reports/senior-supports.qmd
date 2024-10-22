@@ -1,0 +1,75 @@
+# Senior Supports
+
+
+```{r}
+library(tidyverse)
+devtools::load_all()
+
+
+d <- fir_data |> 
+  filter(marsyear < 2023) |> 
+  group_by(ut_number) |> 
+  filter(min(population) > 5e4, service == "Senior Support", cost_payer == "ontario") |> 
+  group_by(marsyear, ut_number, ut_name) |> 
+  summarize(
+    total_real = sum(amount), 
+    population = first(population),
+    per_capita_real = sum(amount_pc),
+    per_capita_cd23 = sum(amount_pc_cd23)
+  )
+```
+
+
+## 2022 Snapshot
+
+```{r}
+#| label: tbl-seniors-2022
+#| tbl-cap: "Snapshot of Senior Support Funding in 2022 per FIR"
+
+library(reactable)
+
+d |> 
+  ungroup() |> 
+  select(
+    marsyear, ut_name, 
+    total_real, 
+    population, 
+    per_capita_real, 
+    per_capita_cd23
+  ) |> 
+  arrange(marsyear, desc(per_capita_cd23)) |> 
+  reactable::reactable(
+    columns = list(
+      marsyear = colDef(
+        filterable = TRUE
+      ),
+      ut_name = colDef(
+        filterable = TRUE
+      ), 
+      total_real = colDef(
+        format = colFormat(
+          currency = "USD", 
+          separators = TRUE
+        )
+      ),
+      per_capita_real = colDef(
+        format = colFormat(
+          currency = "USD", 
+          separators = TRUE
+        )
+      ),
+      per_capita_cd23 = colDef(
+        format = colFormat(
+          currency = "USD", 
+          separators = TRUE
+        )
+      ), 
+      population = colDef(
+        format = colFormat(
+          separators = TRUE
+        )
+      )
+    ), 
+    defaultPageSize = 23
+  )
+```

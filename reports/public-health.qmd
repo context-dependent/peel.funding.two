@@ -1,0 +1,64 @@
+# Public Health
+
+
+```{r ph-setup}
+devtools::load_all()
+library(tidyverse)
+
+d_sample <- fir_data |> 
+  group_by(ut_number) |> 
+  filter(min(population) > 5e4)
+
+fir_data |> 
+  filter(service == "Public Health")
+
+d_lt <- fir_services |> 
+  left_join(fir_statistics, by = c("marsyear", "munid", "ut_number", "municipality_desc", "tier_code")) 
+
+```
+
+## Variance from Peel Region Analysis
+
+On October 15th, The Region provided the following statement on per-capita public health funding: 
+
+> For cost-shared programs, in Peel, Public Health was funded by the Province at approximately $34 per capita in 2022, while Toronto, Hamilton and Ottawa received $49, $49, and $39 per capita respectively. 
+
+```{r ph-variance}
+
+t_ph_var <- d_sample |> 
+  filter(service == "Public Health", marsyear == 2022, cost_payer == "ontario") |> 
+  group_by(marsyear, ut_number, ut_name) |> 
+  summarize(amount_pc_fir = sum(amount_pc), .groups = "drop") |> 
+  mutate(
+    highlight = ut_name |> str_detect("Toronto|Peel|Hamilton|Ottawa"), 
+    amount_pc_region = case_when(
+      ut_name == "Peel R" ~ 34, 
+      ut_name |> str_detect("Toronto") ~ 49, 
+      ut_name |> str_detect("Hamilton") ~ 49, 
+      ut_name |> str_detect("Ottawa") ~ 39, 
+      TRUE ~ NA_real_
+    )
+  ) |>
+  filter(amount_pc_fir > 0) |>  
+  mutate(
+    ut_name = fct_reorder(ut_name, amount_pc_fir)
+  )
+
+t_ph_var |> 
+  ggplot(aes(amount_pc_fir, ut_name)) + 
+  geom_col(aes(fill = highlight)) + 
+  geom_point(aes(x = amount_pc_region), shape = 4, colour = "white", size = 10) 
+
+```
+
+## Lower Tier Funding
+
+
+```{r ph-lt funding}
+d_lt |> 
+  filter(municipality_desc |> str_detect("Peel R|Miss|Bramp|Caledon"), service == "Public Health", cost_payer == "ontario", marsyear == 2022) |> 
+  mutate(amount_pc = amount / population) |> 
+  group_by(marsyear, munid, municipality_desc, cost_type) |> 
+  summarize(amount_pc = sum(amount_pc), .groups = "drop")
+```
+

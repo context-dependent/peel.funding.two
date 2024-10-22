@@ -48,5 +48,45 @@
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Exploratory Analysis</span>"
     ]
+  },
+  {
+    "objectID": "senior-supports.html",
+    "href": "senior-supports.html",
+    "title": "2  Senior Supports",
+    "section": "",
+    "text": "2.1 2022 Snapshot\nShow code\nlibrary(reactable)\n\nd |&gt; \n  ungroup() |&gt; \n  select(\n    marsyear, ut_name, \n    total_real, \n    population, \n    per_capita_real, \n    per_capita_cd23\n  ) |&gt; \n  arrange(marsyear, desc(per_capita_cd23)) |&gt; \n  reactable::reactable(\n    columns = list(\n      marsyear = colDef(\n        filterable = TRUE\n      ),\n      ut_name = colDef(\n        filterable = TRUE\n      ), \n      total_real = colDef(\n        format = colFormat(\n          currency = \"USD\", \n          separators = TRUE\n        )\n      ),\n      per_capita_real = colDef(\n        format = colFormat(\n          currency = \"USD\", \n          separators = TRUE\n        )\n      ),\n      per_capita_cd23 = colDef(\n        format = colFormat(\n          currency = \"USD\", \n          separators = TRUE\n        )\n      ), \n      population = colDef(\n        format = colFormat(\n          separators = TRUE\n        )\n      )\n    ), \n    defaultPageSize = 23\n  )\n\n\n\n\nTable 2.1: Snapshot of Senior Support Funding in 2022 per FIR",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Senior Supports</span>"
+    ]
+  },
+  {
+    "objectID": "public-health.html",
+    "href": "public-health.html",
+    "title": "3  Public Health",
+    "section": "",
+    "text": "3.1 Variance from Peel Region Analysis\nOn October 15th, The Region provided the following statement on per-capita public health funding:\nShow code\nt_ph_var &lt;- d_sample |&gt; \n  filter(service == \"Public Health\", marsyear == 2022, cost_payer == \"ontario\") |&gt; \n  group_by(marsyear, ut_number, ut_name) |&gt; \n  summarize(amount_pc_fir = sum(amount_pc), .groups = \"drop\") |&gt; \n  mutate(\n    highlight = ut_name |&gt; str_detect(\"Toronto|Peel|Hamilton|Ottawa\"), \n    amount_pc_region = case_when(\n      ut_name == \"Peel R\" ~ 34, \n      ut_name |&gt; str_detect(\"Toronto\") ~ 49, \n      ut_name |&gt; str_detect(\"Hamilton\") ~ 49, \n      ut_name |&gt; str_detect(\"Ottawa\") ~ 39, \n      TRUE ~ NA_real_\n    )\n  ) |&gt;\n  filter(amount_pc_fir &gt; 0) |&gt;  \n  mutate(\n    ut_name = fct_reorder(ut_name, amount_pc_fir)\n  )\n\nt_ph_var |&gt; \n  ggplot(aes(amount_pc_fir, ut_name)) + \n  geom_col(aes(fill = highlight)) + \n  geom_point(aes(x = amount_pc_region), shape = 4, colour = \"white\", size = 10)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Public Health</span>"
+    ]
+  },
+  {
+    "objectID": "public-health.html#variance-from-peel-region-analysis",
+    "href": "public-health.html#variance-from-peel-region-analysis",
+    "title": "3  Public Health",
+    "section": "",
+    "text": "For cost-shared programs, in Peel, Public Health was funded by the Province at approximately $34 per capita in 2022, while Toronto, Hamilton and Ottawa received $49, $49, and $39 per capita respectively.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Public Health</span>"
+    ]
+  },
+  {
+    "objectID": "public-health.html#lower-tier-funding",
+    "href": "public-health.html#lower-tier-funding",
+    "title": "3  Public Health",
+    "section": "3.2 Lower Tier Funding",
+    "text": "3.2 Lower Tier Funding\n\n\nShow code\nd_lt |&gt; \n  filter(municipality_desc |&gt; str_detect(\"Peel R|Miss|Bramp|Caledon\"), service == \"Public Health\", cost_payer == \"ontario\", marsyear == 2022) |&gt; \n  mutate(amount_pc = amount / population) |&gt; \n  group_by(marsyear, munid, municipality_desc, cost_type) |&gt; \n  summarize(amount_pc = sum(amount_pc), .groups = \"drop\")\n\n\n# A tibble: 2 × 5\n  marsyear munid municipality_desc cost_type amount_pc\n     &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;             &lt;chr&gt;         &lt;dbl&gt;\n1     2022 21000 Peel R            capital       0.926\n2     2022 21000 Peel R            operating    64.6",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Public Health</span>"
+    ]
   }
 ]

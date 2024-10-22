@@ -44,7 +44,8 @@ fir_meta <- list(
       "Planning",              "Core",         c("L1899"),
       "Administration",        "Core",         c("L0299", "L1910"),
       "Transit",               "Social",       c("L0631", "L0632"), 
-      "Public Health",         "Social",       c("L1010", "L1098"),
+      "Public Health",         "Social",       c("L1010"), 
+      "Other Health",          "Social",       c("L1098"),
       "Hospitals",             "Social",       c("L1020"), 
       "Ambulance",             "Social",       c("L1030", "L1035"), 
       "Cemetaries",            "Social",       c("L1040"), 
@@ -99,15 +100,14 @@ import_fir_data <- function(years, fir_meta) {
     purrr::map_dfr(
       years, 
       ~readr::read_csv(
-        glue::glue(
-          "data-raw/fir/fir_data_{.x}.csv",
-        ),
+        glue::glue("data-raw/fir/fir_data_{.x}.csv"),
         col_types = readr::cols(MUNID = readr::col_integer()), 
         show_col_types = FALSE
       )
     ) |> 
     janitor::clean_names() |> 
-    decompose_slc_code()
+    decompose_slc_code() |> 
+    add_ut_names()
 
   list(
     services = d |> extract_fir_services(fir_meta),
@@ -131,6 +131,7 @@ extract_fir_services <- function(fir_data, fir_meta) {
       marsyear, 
       munid, 
       ut_number,
+      ut_name,
       municipality_desc,
       tier_code,
       service,
@@ -142,29 +143,11 @@ extract_fir_services <- function(fir_data, fir_meta) {
     pivot_payers()
 }
 
-extract_fir_services <- function(fir_data, fir_meta) {
-
-  fir_data |> 
-    dplyr::left_join(fir_meta$cost_classification, by = c("slc_schedule", "slc_column")) |> 
-    dplyr::left_join(fir_meta$service_classification, by = c("slc_line", "slc_schedule")) |>  
-    drop_unused_items() |> 
-    dplyr::mutate(
-      amount = dplyr::case_when(
-        slc_schedule == "51C" & slc_column == "03" ~ -1 * amount, 
-        TRUE ~ amount
-      )
-    ) |> 
-    dplyr::group_by(marsyear, munid, ut_number, municipality_desc, tier_code, service, service_type, cost_type, cost_payer) |> 
-    dplyr::summarize(amount = sum(amount), .groups = "drop") |> 
-    pivot_payers()
-
-}
-
 extract_fir_statistics <- function(fir_data, fir_meta) {  
   fir_data |> 
     dplyr::left_join(fir_meta$quantities, by = c("slc_schedule", "slc_column", "slc_row", "slc_line")) |>
     dplyr::filter(!is.na(variable)) |> 
-    dplyr::group_by(marsyear, munid, ut_number, municipality_desc, tier_code, variable) |>
+    dplyr::group_by(marsyear, munid, ut_number, ut_name, municipality_desc, tier_code, variable) |>
     dplyr::summarize(amount = sum(amount), .groups = "drop")  |> 
     tidyr::pivot_wider(names_from = variable, values_from = amount, values_fill = 0)
 }
@@ -201,55 +184,47 @@ pivot_payers <- function(fir_data) {
 
 aggregate_ut_services <- function(fir_data) {
   fir_data |>
-    group_by(service, service_type, cost_type, cost_payer) |> 
+    dplyr::group_by(service, service_type, cost_type, cost_payer) |> 
     sum_over_uts(
       c(amount)
     )
 }
 
 sum_over_uts <- function(fir_data, vars) {
-  d <- fix_fir_ut_number(fir_data)
-  ut_index <- generate_ut_index(d)
-  ut_data <- d |> 
-    dplyr::group_by(marsyear, ut_number, .add = TRUE) |> 
+  fir_data |> 
+    dplyr::group_by(marsyear, ut_number, ut_name, .add = TRUE) |> 
     dplyr::summarize(
       dplyr::across({{vars}}, sum), 
       .groups = "drop"
     )
-  ut_index |> 
-    dplyr::left_join(ut_data, by = c("marsyear", "ut_number"))
 }
 
 slice_from_uts <- function(fir_data, vars) {
   fir_data |> 
-    dplyr::filter(tier_code %in% c("UT", "ST")) |> 
-    dplyr::select(marsyear, munid, {{vars}})
+    dplyr::group_by(marsyear, ut_number) |> 
+    dplyr::slice(1) |> 
+    dplyr::select(marsyear, ut_number, {{vars}})
 }
 
 aggregate_ut_stats <- function(fir_stats) {
   fir_stats |> 
     slice_from_uts(population) |> 
-    select(marsyear, munid, population)
+    dplyr::select(marsyear, ut_number, population)
 }
 
-fix_fir_ut_number <- function(fir_data) {
-  fir_data |> 
-    dplyr::mutate(
-      ut_number = dplyr::case_when(
-        tier_code == "ST" ~ as.integer(munid), 
-        TRUE ~ as.integer(ut_number)
-      )
-    )
-}
 
 generate_ut_index <- function(fir_data) {
   fir_data |> 
-    dplyr::filter(tier_code %in% c("UT", "ST")) |> 
     dplyr::group_by(marsyear, ut_number) |> 
     dplyr::slice(1) |> 
-    dplyr::select(marsyear, ut_number, munid, municipality_desc, tier_code) 
+    dplyr::select(marsyear, ut_number, ut_name = municipality_desc) 
 }
 
+add_ut_names <- function(fir_data) {
+  ut_index <- generate_ut_index(fir_data)
+  fir_data |> 
+    dplyr::left_join(ut_index, by = c("marsyear", "ut_number"))
+}
 
 fir_raw <- import_fir_data(2015:2023, fir_meta)
 fir_services <- fir_raw$services
@@ -265,13 +240,13 @@ fir_statistics_ut <- fir_statistics |>
   aggregate_ut_stats()
 
 fir_ut_pc <- fir_services_ut |> 
-  dplyr::left_join(fir_statistics_ut, by = c("marsyear", "munid")) |> 
+  dplyr::left_join(fir_statistics_ut, by = c("marsyear", "ut_number")) |> 
   dplyr::mutate(
     amount_pc = amount / population
   ) |> 
   dplyr::left_join(
     on_cpi, 
-    by = c("marsyear" = "year")
+    by = c("marsyear")
   ) |> 
   mutate(
     across(

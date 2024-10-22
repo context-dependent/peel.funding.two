@@ -11,6 +11,8 @@ book:
   chapters:
     - index.qmd
     - exploration.qmd
+    - senior-supports.qmd
+    - public-health.qmd
     - references.qmd
   favicon: favicon.png
   sidebar:
