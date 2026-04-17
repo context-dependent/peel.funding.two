@@ -1,0 +1,60 @@
+---
+title: Blueprint Styles Template
+authors: 
+  - name: "Thomas McManus"
+abstract: |
+  This is a custom Quarto template that uses Typst to generate Blueprint-style reports from Quarto documents.
+bibliography: refs.bib
+date: "2021-09-01"
+columns: 2
+toc: true
+format:
+  bpdoc-typst: default
+---
+
+## Introduction
+
+This is a custom Quarto template that uses Typst to generate Blueprint-style reports from Quarto documents. 
+
+### Paragraph
+
+```{=typst}
+#lorem(100)
+```
+
+### Code Block
+
+@fig-bpdoc-example compares engine displacement to highway mileage. In it, we observe a clear negative relationship between them. Cars with larger engines tend to have lower highway mileage. 
+
+```{r}
+#| warning: false
+#| label: fig-bpdoc-example
+#| fig-cap: "A plot comparing engine displacement to highway mileage."
+library(ggplot2)
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point()
+```
+
+### Bulleted List
+
+- One thing
+- Another thing
+  + A sub-thing
+  + Another sub-thing
+- A third thing
+
+### Numbered List
+
+1. First thing
+2. Second thing
+3. Third thing
+
+## More Information
+
+You can learn more about creating custom Typst templates here: 
+
+<https://quarto.org/docs/prerelease/1.4/typst.html#custom-formats>
+
+
+

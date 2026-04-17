@@ -1,0 +1,593 @@
+# York Region
+
+```{r}
+#| label: setup
+#| output: false
+source("prj.R")
+devtools::load_all()
+library(dplyr)
+library(ggplot2)
+library(purrr)
+
+key_comps <- fir_data |> 
+  filter(
+    all(population >= 3e5),
+    .by = c(utid)
+  ) |> 
+  distinct(utid, munid = utid, ut_name)
+
+t3010_ut <- t3010 |> 
+  select(-matches("^(ut|population)")) |> 
+  dplyr::left_join(
+    fir_data |> 
+      distinct(data_year = marsyear, munid = utid, ut_name, population),
+    by = c("data_year", "munid")
+  ) |> 
+  dplyr::group_by(munid) |> 
+  tidyr::fill(
+    ut_name, .direction = "downup"
+  ) |> 
+  dplyr::ungroup() |> 
+  fill_pop() |> 
+  rename(
+    marsyear = data_year,
+    utid = munid
+  )
+
+showtext::showtext_opts(dpi = 300)
+showtext::showtext_auto(enable = TRUE)
+
+tbls <- list()
+
+```
+
+## FIR
+
+```{r}
+#| label: tbl-yr-fir-summary-soc
+#| tbl-cap: "Municipal Services (Social)"
+
+tbls[["fir-summary-soc"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(cost_payer == "ontario", cost_type == "operating") |> 
+  filter(
+    service_type == "Social",
+    !(service %in% c("Hospitals", "Ambulance", "Culture"))
+  ) |>
+  tabulate_gap() |> 
+  mutate(
+    channel = "Municipal Services (Social)"
+  )
+
+tbls[["fir-summary-soc"]] |>
+  render_gap_tbl()
+```
+
+```{r}
+#| label: fig-yr-fir-soc
+#| fig-cap: "Provincial operating funding for municipal services (per capita), 2015-2023"
+
+tbls[["fir-summary-soc"]] |>
+  filter(marsyear %in% 2015:2024) |>
+  slope_chart(
+    pc_real_muni, 
+    ylab = "Per-capita provincial support (Social)",
+    yfmt = scales::dollar_format(prefix = "$"), 
+    highlight_ut = "York R", 
+    highlight_colour = "blue"
+  ) +
+  labs(
+    y = NULL, 
+    x = "Fiscal year ending",
+    subtitle = "Per-capita provincial operating grants to municipalities for social services",
+    caption = "FIR data;\nshows first and last year of data available for each municipality;\nincludes operating grants for social services (excluding hospitals, ambulance, culture);\namounts adjusted to 2023 dollars using Ontario CPI;"
+  )
+```
+
+```{r}
+#| label: tbl-yr-fir-summary-core
+#| tbl-cap: "Municipal Services (Core)"
+
+tbls[["fir-summary-core"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(cost_payer == "ontario", cost_type == "operating") |> 
+  filter(
+    service_type == "Core"
+  ) |>
+  tabulate_gap() |> 
+  mutate(
+    channel = "Municipal Services (Core)"
+  )
+
+tbls[["fir-summary-core"]] |>
+  render_gap_tbl()
+```
+
+```{r}
+#| label: tbl-yr-fir-summary-total
+#| tbl-cap: "Municipal Services (Total)"
+
+tbls[["fir-summary-total"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(cost_payer == "ontario", cost_type == "operating") |> 
+  tabulate_gap()
+
+tbls[["fir-summary-total"]] |>
+  render_gap_tbl()
+
+```
+
+
+```{r}
+#| label: fig-yr-fir-total
+#| fig-cap: "Municipal Services (Total) 2015-2024"
+
+tbls[["fir-summary-total"]] |> 
+  slope_chart(
+    yvar = pc_real_muni,
+    ylab = "Per-capita provincial funding (Total)",
+    yfmt = scales::dollar_format(prefix = "$"), 
+    highlight_ut = "York R", 
+    highlight_colour = "blue"
+  )
+```
+
+## T3010
+
+```{r}
+#| label: tbl-yr-t3010-summary
+#| tbl-cap: "Summary of provincial funding for poverty relief and community resource organizations, 2019-2023"
+
+tbls[["t3010-summary"]] <- t3010_ut |> 
+  semi_join(
+    key_comps,
+    by = c("utid")
+  ) |> 
+  filter(
+    marsyear %in% 2019:2023
+  ) |> 
+  filter(
+    category %in% c("Organizations Relieving Poverty", "Community Resource"),
+    !is.na(revenue_provincial), 
+    revenue_provincial > 0
+  ) |> 
+  tabulate_gap(
+    y = revenue_provincial,
+    t = marsyear
+  ) |> 
+  mutate(
+    channel = "Nonprofit Services (Poverty Relief and Community Resources)"
+  )
+
+tbls[["t3010-summary"]] |> 
+  filter(ut_name == "York R") |> 
+  render_gap_tbl()
+```
+
+
+```{r}
+#| label: fig-yr-t3010-slope
+#| fig-cap: "Provincial funding for community organizations, 2019-2023"
+tbls[["t3010-summary"]] |>
+  filter(marsyear %in% 2019:2023) |> 
+  slope_chart(
+    pc_real_muni, 
+    xvar = marsyear, 
+    ylab = "Per-capita provincial funding for poverty relief and community resources",
+    yfmt = scales::dollar_format(prefix = "$"),
+    highlight_ut = "York R",
+    highlight_colour = "blue"
+  ) + 
+  labs(
+    caption = "T3010 data;
+    shows first and last year of data available for each municipality;
+    includes provincial funding for organizations relieving poverty and community resources;
+    amounts adjusted to 2023 dollars using Ontario CPI;"
+  )
+```
+
+
+## LHIN
+
+```{r}
+#| label: tbl-yr-lhin-summary
+#| tbl-cap: "LHIN Funding Summary 2017-2020"
+
+tbls[["lhin-summary"]] <- lhin |> 
+  mutate(
+    across(
+      matches("amount|cmha|css"), 
+      ~ real_dollars(.x, data_year, 2023)
+    )
+  ) |> 
+  left_join(
+    fir_data |> 
+      filter(
+        ut_name == "York R",
+      ) |> 
+      distinct(data_year = marsyear, pop_york = population, ut_name),
+    by = c("data_year")
+  ) |> 
+  filter(serves_york) |> 
+  mutate(
+    amount_pc_gap = amount_pc - amount_pc_on,
+    total_gap = amount_pc_gap * pop_york
+  ) %>%
+  bind_rows(
+    summarize(.,
+      lhin = "Central",
+      data_year = Inf,
+      across(
+        c(matches("amount_pc$")),
+        ~ weighted.mean(.x, pop_lhin, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("amount_pc_on$")),
+        ~ weighted.mean(.x, pop_on, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("pop_(lhin|york)")),
+        ~ mean(.x, na.rm = TRUE)
+      ), 
+      .by = c(ut_name)
+    )  |> 
+    mutate(
+      amount_pc_gap = amount_pc - amount_pc_on,
+      total_gap = amount_pc_gap * pop_york
+    )
+  ) |> 
+  mutate(
+    channel = "Local Health Integration Networks (LHINs)",
+    data_year = data_year, 
+    data_range = glue::glue("({min(data_year)}-{max(data_year[data_year < Inf])})"),
+    headline_gap_pc = amount_pc_gap,
+    headline_gap_total = total_gap
+  )
+
+tbls[["lhin-summary"]] |> 
+  select(
+    data_year, 
+    amount_pc_on, 
+    amount_pc, 
+    amount_pc_gap,
+    pop_lhin,
+    pop_york, 
+    total_gap
+  ) |> 
+  gt::gt() |>
+  gt::cols_label(
+    data_year = "Year",
+    amount_pc_on = "Ontario",
+    amount_pc = "York",
+    amount_pc_gap = "Gap",
+    pop_lhin = "Central LHIN",
+    pop_york = "York",
+    total_gap = "Total Gap"
+  ) |>
+  gt::tab_spanner(
+    label = "Provincial Support Per Capita",
+    columns = c(matches("^amount_pc"))
+  ) |>
+  gt::tab_spanner(
+    label = "Population",
+    columns = c(matches("^pop"))
+  ) |> 
+  gt::fmt_currency(
+    columns = c(matches("^(amount|total)")), 
+    decimals = 0
+  ) |> 
+  gt::fmt_number(
+    columns = c(
+      matches("^pop")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::text_replace(
+    locations = gt::cells_body(columns = c(data_year)), 
+    pattern = "Inf",
+    replacement = "Average (2017-2020)"
+  ) 
+```
+
+
+## School Boards
+
+```{r}
+#| label: tbl-yr-efis-summary
+#| tbl-cap: "School board funding 2021-2024"
+
+tbls[["efis-summary"]] <- efis |> 
+  filter(
+    school_board |> stringr::str_detect("york")
+  ) |> 
+  left_join(
+    fir_data |> 
+      filter(
+        ut_name == "York R",
+      ) |> 
+      distinct(data_year = marsyear, population, ut_name),
+    by = c("data_year")
+  ) |>  
+  mutate(
+    rev_provincial_pc_gap = rev_provincial_total_gap / population
+  ) %>%
+  bind_rows(
+    summarize(., 
+      data_year = Inf,
+      across(
+        c(matches("rev_provincial_ps$")),
+        ~ weighted.mean(.x, avg_daily_enrolment, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("rev_provincial_ps_avg$")),
+        ~ weighted.mean(.x, avg_daily_enrolment_ontario, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("^(avg_daily_enrolment|population)")),
+        ~ mean(.x, na.rm = TRUE)
+      ),
+      .by = c(school_board, board_sector, ut_name)
+    ) |> 
+    mutate(
+      rev_provincial_ps_gap = rev_provincial_ps - rev_provincial_ps_avg,
+      rev_provincial_total_gap = rev_provincial_ps_gap * avg_daily_enrolment,
+      rev_provincial_pc_gap = rev_provincial_total_gap / population,
+    )
+  ) |> 
+  mutate(
+    channel = c(
+      "Public" = "Public School Boards",
+      "Catholic" = "Roman Catholic Separate School Boards"
+    )[board_sector],
+    data_year = data_year, 
+    data_range = glue::glue("({min(data_year)}-{max(data_year[data_year < Inf])})"),
+    headline_gap_pc = rev_provincial_pc_gap,
+    headline_gap_total = rev_provincial_total_gap
+  )
+
+tbls[["efis-summary"]] |> 
+  select(
+    board_sector,
+    data_year, 
+    rev_provincial_ps_avg,
+    rev_provincial_ps,
+    rev_provincial_ps_gap,
+    avg_daily_enrolment_ontario,
+    avg_daily_enrolment,
+    rev_provincial_total_gap,
+    population,
+    rev_provincial_pc_gap
+  ) |> 
+  gt::gt(groupname_col = "board_sector") |> 
+  gt::cols_label(
+    data_year = "Year",
+    rev_provincial_ps_avg = "Ontario",
+    rev_provincial_ps = "York",
+    rev_provincial_ps_gap = "Gap",
+    avg_daily_enrolment_ontario = "Ontario",
+    avg_daily_enrolment = "York",
+    rev_provincial_total_gap = "Total Gap",
+    rev_provincial_pc_gap = "Per Capita Gap",
+    population = "York Pop."
+  ) |> 
+  gt::tab_spanner(
+    label = "$ Per Student",
+    columns = c(matches("^rev_provincial_ps"))
+  ) |> 
+  gt::tab_spanner(
+    label = "Avg. Daily Enrolment",
+    columns = c(matches("^avg_daily_enrolment"))
+  ) |> 
+  gt::tab_options(
+    row_group.as_column = TRUE
+  ) |> 
+  gt::fmt_currency(
+    columns = c(matches("^rev")), 
+    decimals = 0
+  ) |> 
+  gt::fmt_number(
+    columns = c(
+      matches("enrolment|population")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::text_replace(
+    locations = gt::cells_body(columns = c(data_year)), 
+    pattern = "Inf",
+    replacement = "Average (2015-2024)"
+  ) 
+```
+
+## Combined Gap
+
+```{r}
+#| label: tbl-yr-combined-gap
+#| tbl-cap: "Combined Funding Gap for York Region"
+
+tbls[["combined-gap"]] <- tbls[c(
+  "fir-on-summary-core",
+  "fir-on-summary-soc",
+  "t3010-summary",
+  "lhin-summary",
+  "efis-summary"
+)] |> 
+  map_dfr(\(.tbl) {
+    .tbl |>
+      dplyr::filter(
+        data_year == Inf,
+        ut_name == "York R"
+      ) |>  
+      dplyr::select(
+        ut_name, 
+        channel,
+        data_range,
+        headline_gap_pc,
+        headline_gap_total
+      ) 
+  }) %>%
+  dplyr::bind_rows(
+    summarize(., 
+      channel = "Z) Total",
+      data_range = "(2015-2024)",
+      headline_gap_pc = sum(headline_gap_pc, na.rm = TRUE),
+      headline_gap_total = sum(headline_gap_total, na.rm = TRUE),
+      .by = ut_name 
+    )
+  )
+
+tbls[["combined-gap"]] |> 
+  gt::gt() |> 
+  gt::cols_hide(
+    c(ut_name)
+  ) |> 
+  gt::cols_label(
+    channel = "Funding Channel",
+    data_range = "Data Range",
+    headline_gap_pc = "Per Capita Gap",
+    headline_gap_total = "Annualized Total Gap"
+  ) |> 
+  gt::fmt_currency(
+    columns = c(
+      matches("^(headline_gap)")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::tab_footnote(
+    footnote = "For individual channels, Per Capita Gap is the annual average per-capita funding gap over the data range; The total row sums the per-capita gaps across channels", 
+    locations = gt::cells_column_labels(columns = c(headline_gap_pc))
+  ) |> 
+  gt::tab_footnote(
+    footnote = "Annualized Total Gap is the product of Per Capita Gap and the average York Region population over the data range", 
+    locations = gt::cells_column_labels(columns = c(headline_gap_total))
+  ) 
+```
+
+
+```{r}
+#| label: tbl-yr-combined-gap-detail
+#| tbl-cap: "Shifts in the Funding Gap for York Region Over Time"
+
+tbls[["combined-gap-detail"]] <- tbls[c(
+  "fir-summary-core",
+  "fir-summary-soc",
+  "t3010-summary",
+  "lhin-summary",
+  "efis-summary"
+)] |> 
+  map_dfr(\(.tbl) {
+    .tbl |>
+      dplyr::filter(
+        ut_name == "York R"
+      ) |>  
+      dplyr::select(
+        ut_name,
+        channel,
+        data_year,
+        data_range,
+        headline_gap_pc,
+        headline_gap_total
+      ) |> 
+      dplyr::mutate(
+        observed_at = dplyr::case_when(
+          data_year == Inf ~ "Annual Average",
+          data_year == min(data_year[data_year < Inf]) ~ "Start Year",
+          data_year == max(data_year[data_year < Inf]) ~ "End Year",
+          TRUE ~ NA_character_
+        ) |> 
+          factor(
+            levels = c("Start Year", "End Year", "Annual Average")
+          )
+      ) |> 
+      dplyr::filter(!is.na(observed_at)) |> 
+      dplyr::select(-data_year)
+  }) %>%
+  dplyr::bind_rows(
+    summarize(., 
+      channel = "Z) Total",
+      data_range = "(2015-2024)",
+      headline_gap_pc = sum(headline_gap_pc, na.rm = TRUE),
+      headline_gap_total = sum(headline_gap_total, na.rm = TRUE),
+      .by = c(observed_at, ut_name)
+    )
+  ) |> 
+  tidyr::pivot_wider(
+    names_from = observed_at,
+    values_from = c(headline_gap_pc, headline_gap_total),
+    names_glue = "{observed_at}::{.value}"
+  ) |> 
+  dplyr::select(
+    ut_name,
+    channel, 
+    data_range, 
+    matches("Start"),
+    matches("End"), 
+    matches("Annual")
+  )
+
+tbls[["combined-gap-detail"]] |>
+  gt::gt() |> 
+  gt::cols_hide(
+    c(ut_name)
+  ) |> 
+  gt::cols_label(
+    channel = "Funding Channel",
+    data_range = "Data Range"
+  ) |>
+  gt::cols_label_with(
+    columns = c(matches("gap_total$")), 
+    fn = \(.x) {"TOT (mn)"}
+  ) |> 
+  gt::cols_label_with(
+    columns = c(matches("gap_pc$")), 
+    fn = \(.x) {"PC ($)"}
+  ) |> 
+  gt::tab_spanner_delim(
+    delim = "::"
+  ) |> 
+  gt::fmt_currency(
+    columns = c(
+      matches("headline_gap_pc")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::fmt_currency(
+    columns = c(
+      matches("headline_gap_total")
+    ), 
+    scale_by = 1e-6,
+    decimals = 0
+  ) |> 
+  gt::text_replace(
+    locations = gt::cells_body(
+      columns = c(channel)
+    ), 
+    pattern = "Poverty Relief and Community Resources",
+    replacement = "PR + CR"
+  )
+```
+
+
+```{r}
+#| label: write-yr-tbls
+#| output: false
+
+tbls |> 
+  purrr::map(\(.tbl) {
+    .tbl |> 
+      dplyr::filter(
+        ut_name == "York R"
+      )
+  }) |> 
+  write_tbl_wb(
+    "reports/tbls/york-replication-tbls.xlsx"
+  )
+```

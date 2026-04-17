@@ -27,7 +27,7 @@ fetch_fir <- function(year, dest = NULL) {
   }
 
   unzip(z, exdir = d)
-  res <- read_csv(file.path(d, glue::glue("fir_data_{year}.csv")))
+  res <- readr::read_csv(file.path(d, glue::glue("fir_data_{year}.csv")))
   is.null(dest) && unlink(d)
   unlink(z)
 

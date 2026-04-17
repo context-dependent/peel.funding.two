@@ -7,12 +7,16 @@ Description: Includes data and analysis for phase 2 of the Peel project
 License: use_gpl3_license()
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: 
     glue,
     httr2
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)
 LazyData: true
 URL: https://github.com/context-dependent/peel.funding.two
 BugReports: https://github.com/context-dependent/peel.funding.two/issues
+Suggests: 
+    fable,
+    fabletools,
+    tsibble

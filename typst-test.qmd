@@ -1,0 +1,95 @@
+---
+title: "York Region Funding Analysis"
+format:
+  bpdoc-typst:
+    default: true
+    columns: 1
+    date: "March 2026"
+    toc: true
+    margin: 
+      x: .5in
+      y: 1in
+    mainfont: "Arial"
+    execute:
+      echo: false
+    bibliography: reports/refs.bib
+    
+---
+
+```{=typst}
+#pagebreak()
+
+#columns(2)[
+
+== Definitions
+
+=== Municipal Tier
+
+Ontario municipalities can be classified into one of three tiers @ontario: 
+
+- #strong[upper-tier] municipalities, which provide regional services to the lower-tier municipalities within their boundaries; 
+- #strong[lower-tier] municipalities, which provide local services to residents; and
+- #strong[single-tier] municipalities, which provide all municipal services. 
+
+=== Peel Region Municipalities
+
+In the analysis that follows, we combine data about upper-tier municipalities with the data about the lower-tier municipalities they serve. 
+When we refer to the aggregate of an upper-tier and its lower-tier municipalities, we use the construction "[Upper-tier name] Municipalities" (e.g. "Peel Region Municipalities", to refer to the aggregate of Brampton, Caledon, Mississauga, and the Region of Peel itself).  
+
+=== Local Health Integration Network (LHIN)
+
+Local Health Integration Networks were established in 2007 to coordinate---at a regional level---the local health services delivery systems in Ontario @bhasin2007. 
+In 2021, the LHIN system was moved under the umbrella of Ontario Health, and renamed Home and Community Care Support Services to reflect its shift to the more specific mandate of coordinating home healthcare and community support services @lhinRedux. 
+
+=== Social Services
+
+The term 'social services' refers to a broad category of programs and services provided for the benefit of the community. It includes services like housing, public health, childcare, and social assistance. Services provided by large institutions like hospitals, universities, and long-term care facilities have been excluded from this analysis as they are not specifically circumscribed by clear municipal boundaries. 
+
+=== Per Capita
+
+A regional quantity divided by the Region's total population. 
+In this report, we use per-capita expenses and provincial contributions to compare total spending between municipalities with different populations. 
+
+== Data Sources
+
+=== Financial Information Return (FIR)
+
+The FIR is the primary source of data on municipal finances in Ontario @firguide. 
+It includes detailed information on the revenues, expenditures, assets, and liabilities of each municipality in the province.
+The FIR is submitted annually by each municipality to the province, and is available to the public through the Ontario Open Data Portal.
+For each municipality, the FIR consolidates financial information from all of the municipality's departments, boards, and commissions, along with the other entities that serve its residents. 
+Of particular relevance to this study, the list of other entities consolidated in the FIR includes Public Health Units (PHUs) and District Social Services Administration Boards (DSSABs), while it excludes school boards and LHINs. 
+
+We use the FIR to compare provincial funding for social services across Ontario municipalities. 
+There is precedent for using the FIR to analyze municipal funding of social services. 
+For example, in a 2020 report for _Ontario 360_, Eidelman and others use the FIR to break down the structure of funding by service and payer @eidelman2020. 
+In the report, the authors identify the province, the federal government, and the municipality as the three main sources of funding for municipally delivered services. @mcmanus2024 builds on the methodology of Eidelman to analyze the allocation of provincial funding for social services in Peel Region.
+
+=== T3010 Returns for Registered Charities
+
+The T3010 is a form that registered charities in Canada must submit to the Canada Revenue Agency (CRA) each year @craCharities2021.
+For each registered charity operating in Canada, the dataset includes detailed information about the organization's finances, activities, and location. 
+The T3010 is available to the public through the Canada Revenue Agency's website. It is used in this report to compare the allocation of provincial grants to registered charities located within Peel Region Municipalities to those in other municipalities.
+
+The registered charities considered in this report are restricted to those that most commonly provide social services, including those coded for general assistance and community support. We have excluded charities that focus on religion, the arts and other areas that are not directly related to social services. 
+
+=== Local Health Integration Network (LHIN) Summary Report
+
+In February of 2024, the Region of Peel's Health Information and Analytics team shared a summary report comparing per-capita provincial funding across the 14 LHINs in Ontario @lhinFunding. 
+Though the report itself is not publicly available, the figures it includes are drawn from various annual reports published by Ontario Home and Community Care Support Services @lhinAnnual2019. 
+This study relies on the figures in the summary report as a key source of information about provincial funding for health services in Peel Region.
+
+=== School Board Financial Reports
+
+School board financial reports record detailed information about the revenues, expenditures, assets, and liabilities of each school board in Ontario. 
+They are submitted annually by each school board to the province, and are available to the public through the Ontario Open Data Portal @schoolBoards2023.
+In this study, the 2023-24 financial report is used to compare provincial funding for education across Ontario school boards. 
+
+=== Municipal Boundary Files
+
+The Ontario GeoHub is a repository of geospatial data maintained by the province of Ontario @municipalBoundaries2024.
+It includes authoritative boundary files for Ontario municipalities, which are used in the report to link FIR data to geographic areas, and then subsequently to other datasets like Census Profiles. 
+
+] // end columns
+
+```

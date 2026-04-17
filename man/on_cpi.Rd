@@ -3,7 +3,7 @@
 \docType{data}
 \name{on_cpi}
 \alias{on_cpi}
-\title{Ontario CPI 2015-2023}
+\title{Ontario CPI 2015-2024}
 \format{
 A tibble with 9 rows and 2 columns
 }

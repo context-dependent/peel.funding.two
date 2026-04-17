@@ -4,16 +4,13 @@ project:
   execute-dir: project
 
 book:
-  title: "Peel Funding Analysis 2"
+  title: "Extended Analysis of Provincial Funding for Social Services in Ontario"
   subtitle: "Data Analysis Reporting"
   author: "Thomas McManus"
   date: "2024-07-26"
   chapters:
     - index.qmd
-    - exploration.qmd
-    - senior-supports.qmd
-    - public-health.qmd
-    - references.qmd
+    - york-replication.qmd
   favicon: favicon.png
   sidebar:
     logo: blueprint-logo.png
@@ -27,9 +24,16 @@ format:
       - custom.scss
     code-fold: true
     code-summary: "Show code"
+  typst:
+    execute:
+      echo: false
+
+knitr:
+  opts_chunk:
+    dev: "ragg_png"
 
 execute: 
-  cache: true
+  cache: false
   message: false
   warning: false
 

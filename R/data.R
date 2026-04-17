@@ -37,9 +37,23 @@
 #' @format A tibble with 145,645 rows and 23 columns
 "t3010"
 
-#' Ontario CPI 2015-2023
+#' Ontario CPI 2015-2024
 #' @description CPI data for All Items in Ontario, 2015-2023, per Statistics Canada
 #' @rdname on_cpi
 #' @name on_cpi
 #' @format A tibble with 9 rows and 2 columns
 "on_cpi"
+
+#' EFIS School Board Financial Reports 2021-2024
+#' @description School board financials for Ontario school boards
+#' @rdname efis
+#' @name efis
+#' @format A tibble with 104 rows and 25 columns
+"efis"
+
+#' LHIN Funding Summary 2017-2021
+#' @description Local Health Integration Network funding
+#' @rdname lhin
+#' @name lhin
+#' @format A tibble with 60 rows and 9 columns
+"lhin"

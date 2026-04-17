@@ -1,0 +1,265 @@
+```{r}
+devtools::load_all()
+library(dplyr)
+```
+
+```{=typst}
+#pagebreak()
+
+#columns(2)[
+
+== Definitions
+
+=== Municipal Tier
+
+Ontario municipalities can be classified into one of three tiers @ontario: 
+
+- #strong[upper-tier] municipalities, which provide regional services to the lower-tier municipalities within their boundaries; 
+- #strong[lower-tier] municipalities, which provide local services to residents; and
+- #strong[single-tier] municipalities, which provide all municipal services. 
+
+=== Halton Region Municipalities
+
+In the analysis that follows, we combine data about upper-tier municipalities with the data about the lower-tier municipalities they serve. 
+When we refer to the aggregate of an upper-tier and its lower-tier municipalities, we use the construction "[Upper-tier name] Municipalities" (e.g. "Halton Region Municipalities", to refer to the aggregate of Burlington, Halton Hills, Milton, Oakville, and the Region of Halton itself).  
+
+=== Local Health Integration Network (LHIN)
+
+Local Health Integration Networks were established in 2007 to coordinate---at a regional level---the local health services delivery systems in Ontario @bhasin2007. 
+In 2021, the LHIN system was moved under the umbrella of Ontario Health, and renamed Home and Community Care Support Services to reflect its shift to the more specific mandate of coordinating home healthcare and community support services @lhinRedux. 
+The authors have been unable to obtain detailed data concerning the funding delivered through the updated Ontario Health network, so we rely on information about the LHIN system to analyze provincial funding for health services.
+
+=== Social Services
+
+The term 'social services' refers to a broad category of programs and services provided for the benefit of the community. It includes services like housing, public health, childcare, and social assistance. Services provided by large institutions like hospitals, universities, and long-term care facilities have been excluded from this analysis as they are not specifically circumscribed by clear municipal boundaries. 
+
+=== Per Capita
+
+A regional quantity divided by the Region's total population. 
+In this report, we use per-capita expenses and provincial contributions to compare total spending between municipalities with different populations. 
+
+== Data Sources
+
+=== Financial Information Return (FIR)
+
+The FIR is the primary source of data on municipal finances in Ontario @firguide. 
+It includes detailed information on the revenues, expenditures, assets, and liabilities of each municipality in the province.
+The FIR is submitted annually by each municipality to the province, and is available to the public through the Ontario Open Data Portal.
+For each municipality, the FIR consolidates financial information from all of the municipality's departments, boards, and commissions, along with the other entities that serve its residents. 
+Of particular relevance to this study, the list of other entities consolidated in the FIR includes Public Health Units (PHUs) and District Social Services Administration Boards (DSSABs), while it excludes school boards and LHINs. 
+
+We use the FIR to compare provincial funding for social services across Ontario municipalities. 
+There is precedent for using the FIR to analyze municipal funding of social services. 
+For example, in a 2020 report for _Ontario 360_, Eidelman and others use the FIR to break down the structure of funding by service and payer @eidelman2020. 
+In the report, the authors identify the province, the federal government, and the municipality as the three main sources of funding for municipally delivered services. @mcmanus2024 builds on the methodology of Eidelman to analyze the allocation of provincial funding for social services in Halton Region.
+
+=== T3010 Returns for Registered Charities
+
+The T3010 is a form that registered charities in Canada must submit to the Canada Revenue Agency (CRA) each year @craCharities2021.
+For each registered charity operating in Canada, the dataset includes detailed information about the organization's finances, activities, and location. 
+The T3010 is available to the public through the Canada Revenue Agency's website. It is used in this report to compare the allocation of provincial grants to registered charities located within Halton Region Municipalities to those in other municipalities.
+
+The registered charities considered in this report are restricted to those that most commonly provide social services, including those coded for general assistance and community support. We have excluded charities that focus on religion, the arts and other areas that are not directly related to social services. 
+
+=== Local Health Integration Network (LHIN) Summary Report
+
+In February of 2024, the Region of Peel's Health Information and Analytics team shared a summary report comparing per-capita provincial funding across the 14 LHINs in Ontario @lhinFunding. 
+Though the report itself is not publicly available, the figures it includes are drawn from various annual reports published by Ontario Home and Community Care Support Services @lhinAnnual2019. 
+This study relies on the figures in the summary report as a key source of information about provincial funding for health services in Halton Region.
+
+=== School Board Financial Reports
+
+School board financial reports record detailed information about the revenues, expenditures, assets, and liabilities of each school board in Ontario. 
+They are submitted annually by each school board to the province, and are available to the public through the Ontario Open Data Portal @schoolBoards2023.
+In this study, financial reports from the years between 2020 and 2025 (inclusive) are used to compare provincial funding for education across Ontario school boards. 
+
+=== Municipal Boundary Files
+
+The Ontario GeoHub is a repository of geospatial data maintained by the province of Ontario @municipalBoundaries2024.
+It includes authoritative boundary files for Ontario municipalities, which are used in the report to link FIR data to geographic areas, and then subsequently to other datasets like Census Profiles. 
+
+== Software
+
+The analysis presented in this report was conducted using R @rlang. 
+Data preparation and visualization were conducted using the tidyverse family of packages @tidyverse.
+For geospatial analysis, this study relied on the sf package @sf. 
+
+]
+
+== Preparing FIR Data
+
+The Financial Information Return (FIR) is the primary source of data for this report. 
+From it, we draw information about the costs of services in municipalities across Ontario, and the funding that supports them. 
+We also use the FIR to supply annual estimates of municipal population and workforce. 
+
+=== Attributing Expenses
+
+We use data from three of the 26 schedules in the SLC: 
+
+- #strong[40 - Consolidated Statement of Operations: Expenses] classifies total operating expenses by service line.
+- #strong[51A - Consolidated Schedule of Tangible Capital Assets by Function] classifies capital investments by service. 
+- #strong[51C - Consolidated Schedule of Tangible Capital Assets by Asset Class] classifies annualized capital costs by asset class. 
+- #strong[12 - Grants & User fees and service charges] details the user fees, grants, and other revenue sources that offset the municipal expense of each service. 
+
+Together, these schedules combine to offer a comprehensive view of the total operating and capital costs of social services in each municipality, along with the user fees, and federal and provincial grants that support them. 
+@tbl-fir-slc-costs shows how we parse SLC codes to extract total expenses, provincial grants, federal grants, transfers from other municipalities, and user fees for each service. 
+
+=== Deriving Municipal Taxpayer Contributions
+
+Total operating expenses for the purposes of this report are calculated to exclude amortization. To achieve this for each functional category, we sum the values in schedule 40, columns 01, 02, 03, 04, 05, 06, 12, and 13, as shown in @eq-operating-expenses.
+
+$ "Total[Operating][Service]" = sum_(L in S) "SLC40C01"_L + ... + "SLC40C13"_L $ <eq-operating-expenses>
+
+Total capital investments by a municipality for a given service are calculated as the sum of schedule 51A, column 3 and schedule 51C, column 2 less schedule 51C, column 3. @eq-capital-investment describes this calculation in more detail. 
+#footnote[
+  In consultations with the Peel Region finance team around @mcmanus2024, we discovered that donated capital assets are reflected in schedules 51A and 51C as municipal investments, so @eq-capital-investment aggregates them with other capital costs. 
+  The FIR totals donated assets in schedule 53, but does not categorize them by functional classification, so we are unable to separate them from other capital costs.
+  The interpretive implications of this limitation are discussed in the limitations section. 
+]
+
+$ "Total[Capital][Service]" = sum_(L in S)"SLC51AC03"_L + "SLC51CC02"_L - "SLC51CC03"_L \
+  "Where" S "is the set of SLC lines associated with Service" $ <eq-capital-investment>
+
+The FIR data don't directly specify the costs borne by municipal taxpayers.
+@eq-municipal-taxpayers shows how we calculate them. 
+Once we have calculated the share of operating and capital costs borne by each municipality for each service, we drop the total costs to avoid double-counting. 
+
+$ "Taxpayers[Operating][Service]" = "Total[Operating][Service]" - sum_(p in P)"p[Operating][Service]" \
+"Taxpayers[Capital][Service]" = "Total[Capital][Service]" - sum_(p in P)"p[Capital][Service]" \
+"Where" P "is the set of payers" {"Ontario", "Canada", "Other Municipalities"} $ <eq-municipal-taxpayers>
+
+In this report, municipal taxpayer contributions include both property taxes and user fees. 
+
+For each payer, @eq-total-service shows how we calculate a total expense for each service by summing the service's capital and operating costs. 
+
+$ "Total[Payer][Service]" = "Total[Payer][Operating][Service]" + "Total[Payer][Capital][Service]" $ <eq-total-service>
+
+=== Classifying Services
+
+Entries in the relevant schedules are attributed to a specific service by a four-digit "Line" in the SLC code. 
+As part of preparing the research dataset, we filter the FIR data to avoid double-counting and aggregate lines that represent granular aspects of the same domain into a single category. 
+
+Some lines in the raw FIR data total entries from multiple other lines, so we must be careful to avoid counting those lines more than once when aggregating the data. 
+For example, the FIR line `1499` corresponds to "Social Housing", which totals expenses and revenues related to public housing (`1410`), cooperative and nonprofit housing (`1420`), rent supplements (`1430`), and other social housing expenses and revenues (`1498`).
+In this case, we only include the total expenses and revenues from `1499` in our analysis. 
+
+@tbl-fir-slc-services shows how we have aggregated and categorized SLC lines into the services and service categories that will be used in the analysis. 
+
+=== Extracting Summary Statistics
+
+The annual summary statistics extracted from the FIR data are pictured in @tbl-fir-slc-stats. 
+
+=== Adjusting for Inflation
+
+The FIR data span several years, so we adjust the data to 2023 constant dollars using the annual average Consumer Price Index (CPI) for all items in Ontario @onCpi.
+
+=== Aggregating Lower and Upper-Tier Municipalities
+
+The FIR data are reported for each municipality in Ontario. To make upper-tier municipalities like the Halton Region comparable to single-tier municipalities, we aggregate the data for the upper-tier and lower-tier municipalities in each region. For each upper-tier municipality, this process involves summing each line item in the FIR data for the upper-tier municipality and all of the lower-tier municipalities within its boundaries. 
+
+=== Per-capita Calculations
+
+To normalize the data for comparison, we calculate per-capita figures for each municipality, for each service, for each funding source and for each year in the data by dividing the given total amount by the population of the municipality, as reported in the FIR data. 
+
+=== Deriving Ontario Averages
+
+We calculate Ontario averages for each per-capita quantity of interest by filtering the FIR data to include only municipalities with populations over 300,000, and then taking the population-weighted mean of the relevant datum. 
+
+$ X["Ontario"] = (sum_(m in M) X[m] dot "Pop"[m]) / (sum_(m in M) "Pop"[m]) \ 
+  "where" X[m] "is a given per-capita amount for municipality" m "," \
+  "Pop"[m] "is the population of municipality" m "," \
+  "and" M "is the set of municipalities with Pop"[m] >= 300,000 $ <eq-fir-ontario-average>
+
+=== Deriving Funding Gaps
+
+The per-capita funding gap, shown in @eq-fir-gap, is then calculated as the difference between the per-capita amount for Halton Region Municipalities and the Ontario average. 
+
+$ X["Gap"] = X["Halton"] - X["Ontario"] $ <eq-fir-gap>
+
+The total funding gap, shown in @eq-fir-total-gap, is calculated as the product of the per-capita gap and the population of Halton Region Municipalities.
+
+$ Y["Gap"] = X["Gap"] dot "Pop"["Halton"] \
+  "where" Y["Gap"] "is the total gap corresponding to the per-capita" X["Gap"] $ <eq-fir-total-gap> 
+
+In this case, where per capita and total funding gaps use the same population data, the indicated approach to calculating the total gap may seem circuitous. However, the separation of the two calculations is intended to make the process more transparent and to facilitate the reuse of the per-capita gap calculation in other contexts, where the per-capita gap and total gap may be calculated using different population data.
+
+== Preparing School Board Finance Reports
+
+The School Board Finance Reports (SBFRs) are the primary source of data for the analysis of school board funding @schoolBoards2023.
+For each school board, the SBFR provides a detailed breakdown of the board's revenue and expenses, as well as the number of students enrolled in the board. 
+
+This study draws a combination of metadata fields and financial reporting fields to construct the research dataset.
+
+=== Fields Extracted for Analysis
+
+The metadata fields used in the analysis are identified by the value of the `Area` column in the source data: `Board Language`, `Board Size`, `Board Sector`
+
+@tbl-efis-codes lists the financial reporting fields (identified by the `Cell Name` column in the source data) extracted from the SBFRs for the analysis. 
+
+To construct the research dataset, we extract the metadata and financial reporting fields, reshape the data such that each row represents a school board and each column represents a field, and filter the data to include only English-language school boards. 
+
+=== Calculating Per-Student Funding
+
+We calculate the per-student funding for each school board by dividing the total revenue by the average daily enrolment.
+
+=== Deriving Ontario Averages
+
+We calculate Ontario averages for each per-student quantity of interest by taking the average-daily-enrolment weighted mean of the relevant datum for all English-language school boards in Ontario with reported enrolment of at least 22,000 students. 
+
+$ Z["Ontario"] = (sum_(b in B) Z[b] dot "Enrolment"[b]) / (sum_(b in B) "Enrolment"[b]) \ 
+  Z[b] "is a given per-student amount for school board" b "," \
+  "Enrolment"[b] "is the average daily enrolment of school board" b "," \
+  "and" B "is the set of English-language school boards with Enrolment"[b] >= 22,000 $ <eq-sbfr-ontario-average>
+
+=== Deriving Funding Gaps
+
+The per-student funding gap, shown in @eq-sbfr-gap-ps, is then calculated as the difference between the per-student amount for each of Peel's English-language school boards and the Ontario average.
+
+$ Z["Gap"] = Z[b] - Z["Ontario"] forall b in {"Peel DSB", "Durham Peel Catholic DSB"} \
+  "where" Z["Gap"] "is the gap in a given per-student quantity" $ <eq-sbfr-gap-ps>
+
+Total funding gaps are calculated as the product of the per-student gap and the average daily enrolment of the school board. 
+Per-capita funding gaps are calculated by dividing the total funding gap by the population of Peel Region Municipalities. 
+
+$ Y["Gap"] = Z["Gap"] dot "Enrolment"[b] forall b in {"Peel DSB", "Durham Peel Catholic DSB"} \
+  X["Gap"] = Y["Gap"] / "Pop"["Peel"] \
+  "where" Y["Gap"] "is the corresponding total gap, and" \
+  X["Gap"] "is the corresponding per-capita gap" $
+
+== Preparing T3010 Data
+
+Before data from the T3010 can be used in the analysis, we have to achieve the following processing goals: 
+
++ Filter the data to include only relevant charity organizations;
++ Select relevant columns from the available datasets; and
++ Align municipality field with official Ontario boundaries (and the FIR data).
+
+=== Filtering the data
+
+For this report, a charity organization is relevant if it is located in Ontario and provides social services, and it reports on its sources of funding. 
+Dropping charities _registered_ outside of Ontario is straightforward, though it is possible that some charities _operating_ in Ontario are registered elsewhere, and conversely that some charities registered elsewhere operate in Ontario. The data do not provide a way to distinguish between these cases, so we must accept some level of additional uncertainty in our analysis. 
+
+The data include a field for the charity's category code, a four-digit number that corresponds to a high-level category of the charity's activities.
+#footnote[Examples of category code values include `0001` for "Organizations Relieving Poverty", `0175` for "Agriculture", and `0100` for "Core Health Care"]
+To identify charities that provide social services, we designate a relevant set of top-level category codes @craCharitiesCodes2021. 
+@tbl-t3010-cats lists relevant category codes and divides them into service domains that will be used in the analysis.
+
+=== Aligning Municipality Designation
+
+The T3010 data are organized by registered charity, not by municipality.
+To link the data to the FIR data, we use the `tidygeocoder` package to call MapBox's "forward geocoding" service to associate each charity with a latitude and longitude, then intersect that set of points with the Ontario municipal boundaries to assign each charity to a municipality @mapboxApiDocs @pkg-tidygeocoder. We associate each value of the T3010 "City" field with the centroid of the corresponding postal code points produced by the geocoding process. Geocoding postal codes is not a perfect solution, as postal codes do not always align with municipal boundaries, and can be quite large in rural areas. However, we are confident that the method is the best feasible solution for this analysis. 
+
+=== Deriving Gaps
+
+For nonprofit services, funding gaps are calculated in a manner that mirrors the FIR analysis. 
+
+== Processing LHIN Summary Reports
+
+The Local Health Integration Network (LHIN) Summary Reports are the primary source of data for the analysis of health services funding @lhinFunding. For each LHIN, the Summary Report provides total provincial funding for each of the LHIN's primary service domains, as well as the population of the LHIN, and the resulting per-capita amounts. As a result, the provided data don't require the same degree of preprocessing as the FIR, T3010, and SBFR data.
+
+=== Deriving Gaps
+
+The per-capita funding gap for Halton Region is derived by subtracting the population-weighted average per-capita funding for the Mississauga Halton LHIN from the population-weighted average per-capita funding for all LHINs in Ontario. As with the other analyses, the total funding gap is calculated as the product of the per-capita funding gap and the population of Halton Region Municipalities.
+
+#pagebreak()
+```

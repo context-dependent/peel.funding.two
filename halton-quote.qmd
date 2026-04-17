@@ -1,0 +1,86 @@
+---
+format:
+  bpdoc-typst:
+    default: true
+    columns: 1
+    date: "April 2026"
+    toc: false
+    title-page: false
+    margin: 
+      x: .5in
+      y: 1in
+    mainfont: "Arial"
+    execute:
+      echo: false
+    bibliography: reports/refs.bib
+---
+# Halton Region Funding Analysis Report
+
+## Overview
+
+```{=typst}
+#figure(
+  table(
+    columns: 2, 
+    align: (right + horizon, left + horizon), 
+    stroke: none, 
+    table.header(
+      [Matter], [Fact]
+    ), 
+    table.hline(), 
+    [Client], [Community Development Halton], 
+    [Proponent], [Blueprint-ADE], 
+    [Timeline], [April 2026], 
+    [Final Deliverables], [Halton Region Funding Analysis Report], 
+    [Budget], [\$6,000 + HST]
+  ), 
+  caption: [Project Summary]
+) <t-overview>
+```
+
+## Background 
+
+Blueprint has used public data to analyze municipal funding gaps in Peel (@mcmanus2024) and York (@meagher2026) Regions. 
+Community Development Halton (CDH) has expressed interest in commissioning a similar analysis focused on Halton Region. 
+This quote outlines the proposed scope of work, key activities, deliverables, and budget for that analysis. 
+
+This analysis will provide CDH with a data-driven understanding of the provincial funding that municipalities and non-profits in Halton Region receive, and how it differs from the funding received by municipalities and non-profits in other similar regions of Ontario. 
+Ultimately, it will equip CDH and its partners to bring rigorously derived evidence to bear in conversations about the distribution of provincial funding across Ontario. 
+
+## Scope of Work
+
+The scope of work for this project includes the development of a Halton Region Funding Analysis Report and support for CDH's subsequent reporting and knowledge mobilization activities. 
+
+### Deliverable
+
+The Halton Region Funding Analysis Report will include:
+
+- A methodology section, clearly describing the data sources, data processing steps, and analytical methods used in the analysis.
+- A results section, following the format of the Peel and York Region analyses, presenting the findings of the analysis in a clear and accessible manner, using tables and visualizations as appropriate.
+
+CDH will have the opportunity to review and provide feedback on a draft version of the report before the final version is delivered. 
+
+### Reporting and Knowledge Mobilization Support
+
+In addition to the report itself, Blueprint will provide support for CDH's reporting and knowledge mobilization activities related to the analysis.
+
+This may include: 
+
+- Advising on the development of presentations or other materials to communicate the findings of the analysis to various audiences.
+- Participating in meetings or presentations to help communicate the findings of the analysis to stakeholders.
+- Providing guidance on how to use the findings of the analysis to inform advocacy efforts or other initiatives aimed at addressing funding gaps in Halton Region.
+
+## Budget
+
+
+```{r}
+#| label: tbl-budget
+#| echo: false
+
+tibble::tibble(
+  Item = c("Data Analysis and Report Writing", "Reporting and Knowledge Mobilization Support", "Total"),
+  `Level of Effort` = c("3 days", "1 day", "4 days"),
+  Cost = c("$4,500 + HST", "$1,500 + HST", "$6,000 + HST")
+) |> 
+gt::gt()
+```

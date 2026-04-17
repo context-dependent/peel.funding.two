@@ -1,0 +1,1258 @@
+---
+title: "Halton Region Funding Analysis"
+format:
+  bpdoc-typst:
+    default: true
+    columns: 1
+    date: "March 2026"
+    toc: true
+    title-page: true
+    margin: 
+      x: .5in
+      y: 1in
+    mainfont: "Arial"
+    execute:
+      echo: false
+    bibliography: reports/refs.bib
+---
+
+```{r}
+#| label: setup
+#| output: false
+source("reports/prj.R")
+devtools::load_all()
+library(dplyr)
+library(ggplot2)
+library(purrr)
+
+key_comps <- fir_data |> 
+  filter(
+    all(population >= 3e5),
+    .by = c(utid)
+  ) |> 
+  mutate(
+    munid = utid
+  ) |> 
+  summarize(
+    min_population = min(population), 
+    .by = c(utid, ut_name, munid)
+  )
+
+t3010_ut <- t3010 |> 
+  select(-matches("^(ut|population)")) |> 
+  dplyr::left_join(
+    fir_data |> 
+      distinct(data_year = marsyear, munid = utid, ut_name, population),
+    by = c("data_year", "munid")
+  ) |> 
+  dplyr::group_by(munid) |> 
+  tidyr::fill(
+    ut_name, .direction = "downup"
+  ) |> 
+  dplyr::ungroup() |> 
+  fill_pop() |> 
+  rename(
+    marsyear = data_year,
+    utid = munid
+  )
+
+showtext::showtext_opts(dpi = 300)
+showtext::showtext_auto(enable = TRUE)
+
+tbls <- list()
+
+```
+
+`#pagebreak()`{=typst}
+
+# Methodology
+
+```{=typst}
+
+#columns(2)[
+
+== Definitions
+
+=== Municipal Tier
+
+Ontario municipalities can be classified into one of three tiers @ontario: 
+
+- #strong[upper-tier] municipalities, which provide regional services to the lower-tier municipalities within their boundaries; 
+- #strong[lower-tier] municipalities, which provide local services to residents; and
+- #strong[single-tier] municipalities, which provide all municipal services. 
+
+=== Halton Region Municipalities
+
+In the analysis that follows, we combine data about upper-tier municipalities with the data about the lower-tier municipalities they serve. 
+When we refer to the aggregate of an upper-tier and its lower-tier municipalities, we use the construction "[Upper-tier name] Municipalities" (e.g. "Halton Region Municipalities", to refer to the aggregate of Burlington, Halton Hills, Milton, Oakville, and the Region of Halton itself).  
+
+=== Local Health Integration Network (LHIN)
+
+Local Health Integration Networks were established in 2007 to coordinate---at a regional level---the local health services delivery systems in Ontario @bhasin2007. 
+In 2021, the LHIN system was moved under the umbrella of Ontario Health, and renamed Home and Community Care Support Services to reflect its shift to the more specific mandate of coordinating home healthcare and community support services @lhinRedux. 
+The authors have been unable to obtain detailed data concerning the funding delivered through the updated Ontario Health network, so we rely on information about the LHIN system to analyze provincial funding for health services.
+
+=== Social Services
+
+The term 'social services' refers to a broad category of programs and services provided for the benefit of the community. It includes services like housing, public health, childcare, and social assistance. Services provided by large institutions like hospitals, universities, and long-term care facilities have been excluded from this analysis as they are not specifically circumscribed by municipal boundaries. 
+
+=== Per Capita
+
+A regional quantity divided by the Region's total population. 
+In this report, we use per-capita expenses and provincial contributions to compare total spending between municipalities with different populations. 
+
+== Data Sources
+
+=== Financial Information Return (FIR)
+
+The FIR is the primary source of data on municipal finances in Ontario @firguide. 
+It includes detailed information on the revenues, expenditures, assets, and liabilities of each municipality in the province.
+The FIR is submitted annually by each municipality to the province, and is available to the public through the Ontario Open Data Portal.
+For each municipality, the FIR consolidates financial information from all of the municipality's departments, boards, and commissions, along with the other entities that serve its residents. 
+Of particular relevance to this study, the list of other entities consolidated in the FIR includes Public Health Units (PHUs) and District Social Services Administration Boards (DSSABs), while it excludes school boards and LHINs. 
+
+We use the FIR to compare provincial funding for social services across Ontario municipalities. 
+There is precedent for using the FIR to analyze municipal funding of social services. 
+For example, in a 2020 report for _Ontario 360_, Eidelman and others use the FIR to break down the structure of funding by service and payer @eidelman2020. 
+In the report, the authors identify the province, the federal government, and the municipality as the three main sources of funding for municipally delivered services. @mcmanus2024 builds on the methodology of Eidelman to analyze the allocation of provincial funding for social services in Halton Region.
+
+=== T3010 Returns for Registered Charities
+
+The T3010 is a form that registered charities in Canada must submit to the Canada Revenue Agency (CRA) each year @craCharities2021.
+For each registered charity operating in Canada, the dataset includes detailed information about the organization's finances, activities, and location. 
+The T3010 is available to the public through the Canada Revenue Agency's website. It is used in this report to compare the allocation of provincial grants to registered charities located within Halton Region Municipalities to those in other municipalities.
+
+The registered charities considered in this report are restricted to those that most commonly provide social services, including those coded for general assistance and community support. We have excluded charities that focus on religion, the arts and other areas that are not directly related to social services. 
+
+=== Local Health Integration Network (LHIN) Summary Report
+
+In February of 2024, the Region of Peel's Health Information and Analytics team shared a summary report comparing per-capita provincial funding across the 14 LHINs in Ontario @lhinFunding. 
+Though the report itself is not publicly available, the figures it includes are drawn from various annual reports published by Ontario Home and Community Care Support Services @lhinAnnual2019. 
+This study relies on the figures in the summary report as a key source of information about provincial funding for health services in Halton Region.
+
+=== School Board Financial Reports
+
+School board financial reports record detailed information about the revenues, expenditures, assets, and liabilities of each school board in Ontario. 
+They are submitted annually by each school board to the province, and are available to the public through the Ontario Open Data Portal @schoolBoards2023.
+In this study, financial reports from the years between 2020 and 2025 (inclusive) are used to compare provincial funding for education across Ontario school boards. 
+
+=== Municipal Boundary Files
+
+The Ontario GeoHub is a repository of geospatial data maintained by the province of Ontario @municipalBoundaries2024.
+It includes authoritative boundary files for Ontario municipalities, which are used in the report to link FIR data to geographic areas, and then subsequently to other datasets like Census Profiles. 
+
+== Software
+
+The analysis presented in this report was conducted using R @rlang. 
+Data preparation and visualization were conducted using the tidyverse family of packages @tidyverse.
+For geocoding, this study relied on the tidygeocoder package @pkg-tidygeocoder, which provides an interface to the Mapbox geocoding API (@mapboxApiDocs).
+For geospatial analysis, this study relied on the sf package @sf. 
+
+== Limitations
+
+This study brings together a wide variety of data sources. 
+Each of these data sources brings its own idiosyncrasies, which in turn introduce limitations to the analysis.
+We are confident in the conclusions drawn in this report, but the following limitations should be kept in mind when interpreting the results.
+
+=== Scope of Nonprofit Services Analysis
+
+The analysis of nonprofit services excludes many service providers that receive provincial funding and provide services in Halton Region Municipalities, but whose scope of services extends beyond those classically understood as social services (e.g. religious institutions, arts organizations) or whose geographic scope of service delivery (e.g. hospitals, universities) extends beyond the boundaries of Halton Region Municipalities. 
+
+Sensitivity analysis indicates that the exclusion of these organizations---particularly hospitals---decreases the magnitude of the gap in per-capita provincial support for nonprofit services in Halton Region Municipalities. This suggests that the gap in provincial support for nonprofit services in Halton Region Municipalities presented in this report is a conservative estimate, and that the true figure is likely to be greater in magnitude.  
+
+=== Currency of LHIN Funding Analysis
+
+The data used to calculate the per-capita gap in provincial support for LHINs is from 2017 to 2020.
+The LHIN network's restructuring under Ontario Health in 2021 may have changed the distribution of funding across the province, so the gap in per-capita support for LHINs may have changed since 2020.
+
+=== Imprecision of Forward Geocoding
+
+To efficiently assign T3010 data to municipalities, we use forward geocoding to associate postal codes with representative points. 
+This method is inherently imprecise, as postal codes can cover large areas, and the representative points may not fall within the boundaries of the municipality with which the postal code should be associated.
+The potential error introduced by this method affects the precision of our analysis of nonprofit services.
+
+=== Quantifying and Adjusting for Variations in Need
+
+The analysis presented in this report does not account for variations in the need for social services across municipalities.
+The assumption that the need for social services is uniform across municipalities with populations over 300,000 is unlikely to hold in practice. 
+An analysis that accounts for variations in need would provide more precise estimates of the funding gaps faced in Halton Region Municipalities. 
+
+]
+
+#pagebreak()
+
+== Preparing FIR Data
+
+The Financial Information Return (FIR) is the primary source of data for this report. 
+From it, we draw information about the costs of services in municipalities across Ontario, and the funding that supports them. 
+We also use the FIR to supply annual estimates of municipal population and workforce. 
+
+=== Attributing Expenses
+
+We use data from three of the 26 schedules in the SLC: 
+
+- #strong[40 - Consolidated Statement of Operations: Expenses] classifies total operating expenses by service line.
+- #strong[51A - Consolidated Schedule of Tangible Capital Assets by Function] classifies capital investments by service. 
+- #strong[51C - Consolidated Schedule of Tangible Capital Assets by Asset Class] classifies annualized capital costs by asset class. 
+- #strong[12 - Grants & User fees and service charges] details the user fees, grants, and other revenue sources that offset the municipal expense of each service. 
+
+Together, these schedules combine to offer a comprehensive view of the total operating and capital costs of social services in each municipality, along with the user fees, and federal and provincial grants that support them. 
+@tbl-fir-slc-costs shows how we parse SLC codes to extract total expenses, provincial grants, federal grants, transfers from other municipalities, and user fees for each service. 
+
+=== Deriving Municipal Taxpayer Contributions
+
+Total operating expenses for the purposes of this report are calculated to exclude amortization. To achieve this for each functional category, we sum the values in schedule 40, columns 01, 02, 03, 04, 05, 06, 12, and 13, as shown in @eq-operating-expenses.
+
+$ "Total[Operating][Service]" = sum_(L in S) "SLC40C01"_L + ... + "SLC40C13"_L $ <eq-operating-expenses>
+
+Total capital investments by a municipality for a given service are calculated as the sum of schedule 51A, column 3 and schedule 51C, column 2 less schedule 51C, column 3. @eq-capital-investment describes this calculation in more detail. 
+#footnote[
+  In consultations with the Peel Region finance team around @mcmanus2024, we discovered that donated capital assets are reflected in schedules 51A and 51C as municipal investments, so @eq-capital-investment aggregates them with other capital costs. 
+  The FIR totals donated assets in schedule 53, but does not categorize them by functional classification, so we are unable to separate them from other capital costs.
+  The interpretive implications of this limitation are discussed in the limitations section. 
+]
+
+$ "Total[Capital][Service]" = sum_(L in S)"SLC51AC03"_L + "SLC51CC02"_L - "SLC51CC03"_L \
+  "Where" S "is the set of SLC lines associated with Service" $ <eq-capital-investment>
+
+The FIR data don't directly specify the costs borne by municipal taxpayers.
+@eq-municipal-taxpayers shows how we calculate them. 
+Once we have calculated the share of operating and capital costs borne by each municipality for each service, we drop the total costs to avoid double-counting. 
+
+$ "Taxpayers[Operating][Service]" = "Total[Operating][Service]" - sum_(p in P)"p[Operating][Service]" \
+"Taxpayers[Capital][Service]" = "Total[Capital][Service]" - sum_(p in P)"p[Capital][Service]" \
+"Where" P "is the set of payers" {"Ontario", "Canada", "Other Municipalities"} $ <eq-municipal-taxpayers>
+
+In this report, municipal taxpayer contributions include both property taxes and user fees. 
+
+For each payer, @eq-total-service shows how we calculate a total expense for each service by summing the service's capital and operating costs. 
+
+$ "Total[Payer][Service]" = "Total[Payer][Operating][Service]" + "Total[Payer][Capital][Service]" $ <eq-total-service>
+
+=== Classifying Services
+
+Entries in the relevant schedules are attributed to a specific service by a four-digit "Line" in the SLC code. 
+As part of preparing the research dataset, we filter the FIR data to avoid double-counting and aggregate lines that represent granular aspects of the same domain into a single category. 
+
+Some lines in the raw FIR data total entries from multiple other lines, so we must be careful to avoid counting those lines more than once when aggregating the data. 
+For example, the FIR line `1499` corresponds to "Social Housing", which totals expenses and revenues related to public housing (`1410`), cooperative and nonprofit housing (`1420`), rent supplements (`1430`), and other social housing expenses and revenues (`1498`).
+In this case, we only include the total expenses and revenues from `1499` in our analysis. 
+
+@tbl-fir-slc-services shows how we have aggregated and categorized SLC lines into the services and service categories that will be used in the analysis. 
+
+=== Extracting Summary Statistics
+
+The annual summary statistics extracted from the FIR data are pictured in @tbl-fir-slc-stats. 
+
+=== Adjusting for Inflation
+
+The FIR data span several years, so we adjust the data to 2023 constant dollars using the annual average Consumer Price Index (CPI) for all items in Ontario @onCpi.
+
+=== Aggregating Lower and Upper-Tier Municipalities
+
+The FIR data are reported for each municipality in Ontario. To make upper-tier municipalities like the Halton Region comparable to single-tier municipalities, we aggregate the data for the upper-tier and lower-tier municipalities in each region. For each upper-tier municipality, this process involves summing each line item in the FIR data for the upper-tier municipality and all of the lower-tier municipalities within its boundaries. 
+
+=== Per-capita Calculations
+
+To normalize the data for comparison, we calculate per-capita figures for each municipality, for each service, for each funding source and for each year in the data by dividing the given total amount by the population of the municipality, as reported in the FIR data. 
+
+=== Deriving Ontario Averages
+
+We calculate Ontario averages for each per-capita quantity of interest by filtering the FIR data to include only municipalities with populations over 300,000, and then taking the population-weighted mean of the relevant datum. 
+
+$ X["Ontario"] = (sum_(m in M) X[m] dot "Pop"[m]) / (sum_(m in M) "Pop"[m]) \ 
+  "where" X[m] "is a given per-capita amount for municipality" m "," \
+  "Pop"[m] "is the population of municipality" m "," \
+  "and" M "is the set of municipalities with Pop"[m] >= 300,000 $ <eq-fir-ontario-average>
+
+=== Deriving Funding Gaps
+
+The per-capita funding gap, shown in @eq-fir-gap, is then calculated as the difference between the per-capita amount for Halton Region Municipalities and the Ontario average. 
+
+$ X["Gap"] = X["Halton"] - X["Ontario"] $ <eq-fir-gap>
+
+The total funding gap, shown in @eq-fir-total-gap, is calculated as the product of the per-capita gap and the population of Halton Region Municipalities.
+
+$ Y["Gap"] = X["Gap"] dot "Pop"["Halton"] \
+  "where" Y["Gap"] "is the total gap corresponding to the per-capita" X["Gap"] $ <eq-fir-total-gap> 
+
+In this case, where per capita and total funding gaps use the same population data, the indicated approach to calculating the total gap may seem circuitous. However, the separation of the two calculations is intended to make the process more transparent and to facilitate the reuse of the per-capita gap calculation in other contexts, where the per-capita gap and total gap may be calculated using different population data.
+
+== Preparing School Board Finance Reports
+
+The School Board Finance Reports (SBFRs) are the primary source of data for the analysis of school board funding @schoolBoards2023.
+For each school board, the SBFR provides a detailed breakdown of the board's revenue and expenses, as well as the number of students enrolled in the board. 
+
+This study draws a combination of metadata fields and financial reporting fields to construct the research dataset.
+
+=== Fields Extracted for Analysis
+
+The metadata fields used in the analysis are identified by the value of the `Area` column in the source data: `Board Language`, `Board Size`, `Board Sector`
+
+@tbl-efis-codes lists the financial reporting fields (identified by the `Cell Name` column in the source data) extracted from the SBFRs for the analysis. 
+
+To construct the research dataset, we extract the metadata and financial reporting fields, reshape the data such that each row represents a school board and each column represents a field, and filter the data to include only English-language school boards. 
+
+=== Calculating Per-Student Funding
+
+We calculate the per-student funding for each school board by dividing the total revenue by the average daily enrolment.
+
+=== Deriving Ontario Averages
+
+We calculate Ontario averages for each per-student quantity of interest by taking the average-daily-enrolment weighted mean of the relevant datum for all English-language school boards in Ontario with reported enrolment of at least 22,000 students. 
+
+$ Z["Ontario"] = (sum_(b in B) Z[b] dot "Enrolment"[b]) / (sum_(b in B) "Enrolment"[b]) \ 
+  Z[b] "is a given per-student amount for school board" b "," \
+  "Enrolment"[b] "is the average daily enrolment of school board" b "," \
+  "and" B "is the set of English-language school boards with Enrolment"[b] >= 22,000 $ <eq-sbfr-ontario-average>
+
+=== Deriving Funding Gaps
+
+The per-student funding gap, shown in @eq-sbfr-gap-ps, is then calculated as the difference between the per-student amount for each of Halton's English-language school boards and the Ontario average.
+
+$ Z["Gap"] = Z[b] - Z["Ontario"] forall b in {"Halton DSB", "Halton Catholic DSB"} \
+  "where" Z["Gap"] "is the gap in a given per-student quantity" $ <eq-sbfr-gap-ps>
+
+Total funding gaps are calculated as the product of the per-student gap and the average daily enrolment of the school board. 
+Per-capita funding gaps are calculated by dividing the total funding gap by the population of Halton Region Municipalities. 
+
+$ Y["Gap"] = Z["Gap"] dot "Enrolment"[b] forall b in {"Halton DSB", "Halton Catholic DSB"} \
+  X["Gap"] = Y["Gap"] / "Pop"["Halton"] \
+  "where" Y["Gap"] "is the corresponding total gap, and" \
+  X["Gap"] "is the corresponding per-capita gap" $
+
+== Preparing T3010 Data
+
+Before data from the T3010 can be used in the analysis, we have to achieve the following processing goals: 
+
++ Filter the data to include only relevant charity organizations;
++ Select relevant columns from the available datasets; and
++ Align municipality field with official Ontario boundaries (and the FIR data).
+
+=== Filtering the data
+
+For this report, a charity organization is relevant if it is located in Ontario and provides social services, and it reports on its sources of funding. 
+Dropping charities _registered_ outside of Ontario is straightforward, though it is possible that some charities _operating_ in Ontario are registered elsewhere, and conversely that some charities operating elsewhere are registered in Ontario. The data do not provide a way to distinguish between these cases, so we must accept some level of additional uncertainty in our analysis. 
+
+The data include a field for the charity's category code, a four-digit number that corresponds to a high-level category of the charity's activities.
+#footnote[Examples of category code values include `0001` for "Organizations Relieving Poverty", `0175` for "Agriculture", and `0100` for "Core Health Care"]
+To identify charities that provide social services, we designate a relevant set of top-level category codes @craCharitiesCodes2021. 
+@tbl-t3010-cats lists relevant category codes and divides them into service domains that will be used in the analysis.
+
+=== Aligning Municipality Designation
+
+The T3010 data are organized by registered charity, not by municipality.
+To link the data to the FIR data, we use the `tidygeocoder` package to call MapBox's "forward geocoding" service to associate each charity with a latitude and longitude, then intersect that set of points with the Ontario municipal boundaries to assign each charity to a municipality @mapboxApiDocs @pkg-tidygeocoder. We associate each value of the T3010 "City" field with the centroid of the corresponding postal code points produced by the geocoding process. Geocoding postal codes is not a perfect solution, as postal codes do not always align with municipal boundaries, and can be quite large in rural areas. However, we are confident that the method is the best feasible solution for this analysis. 
+
+=== Deriving Gaps
+
+For nonprofit services, funding gaps are calculated in a manner that mirrors the FIR analysis. 
+
+== Processing LHIN Summary Reports
+
+The Local Health Integration Network (LHIN) Summary Reports are the primary source of data for the analysis of health services funding @lhinFunding. For each LHIN, the Summary Report provides total provincial funding for each of the LHIN's primary service domains, as well as the population of the LHIN, and the resulting per-capita amounts. As a result, the provided data don't require the same degree of preprocessing as the FIR, T3010, and SBFR data.
+
+=== Deriving Gaps
+
+The per-capita funding gap for Halton Region is derived by subtracting the population-weighted average per-capita funding for the Mississauga Halton LHIN from the population-weighted average per-capita funding for all LHINs in Ontario. As with the other analyses, the total funding gap is calculated as the product of the per-capita funding gap and the population of Halton Region Municipalities.
+```
+
+## Reference Tables
+
+```{r}
+#| label: tbl-key-comps
+#| tbl-cap: "Key Comparison Municipalities for Halton Region"
+
+key_comps |> 
+  gt::gt() |> 
+  gt::cols_label(
+    utid = "Municipality ID",
+    ut_name = "Municipality",
+    min_population = "Minimum Population (2015-2024)",
+  ) |> 
+  gt::cols_hide(
+    c(munid)
+  ) |> 
+  gt::fmt_number(
+    columns = c(min_population), 
+    decimals = 0
+  ) |> 
+  gt_global() 
+```
+
+```{r}
+#| label: tbl-t3010-cats
+#| tbl-cap: "Included T3010 Categories for Halton Region Nonprofit Funding Analysis"
+
+t3010_ut |> 
+  filter(
+    category %in% c("Organizations Relieving Poverty", "Community Resource"),
+    !is.na(revenue_provincial), 
+    revenue_provincial > 0
+  ) |> 
+  summarize(
+    n = n_distinct(charity_id),
+    prov_rev = sum(revenue_provincial),
+    .by = c(category_code, category, sub_category_code, sub_category)
+  ) |> 
+  arrange(
+    sub_category_code
+  ) |> 
+  mutate(
+    category_label = glue::glue("{category_code}: {category}"),
+    #sub_category = stringr::str_trunc(sub_category, 50, side = "right")
+  ) |> 
+  gt::gt(groupname_col = "category_label") |> 
+  gt::tab_options(
+    row_group.as_column = TRUE
+  ) |> 
+  gt::cols_label(
+    sub_category_code = "Code", 
+    sub_category = "Sub-category",
+    n = "N", 
+    prov_rev = "Total Provincial Revenue (mn)"
+  ) |> 
+  gt::cols_hide(
+    c(category_code, category)
+  ) |> 
+  gt::tab_footnote(
+    footnote = "Count of unique registered charities in each category", 
+    locations = gt::cells_column_labels(columns = c(n))
+  ) |> 
+  gt::tab_footnote(
+    footnote = "Total provincial revenue reported on T3010 filings", 
+    locations = gt::cells_column_labels(columns = c(prov_rev))
+  ) |> 
+  gt::fmt_currency(
+    columns = c(prov_rev), 
+    decimals = 0,
+    scale_by = 1e-6
+  ) |> 
+  gt::tab_style(
+    style = gt::cell_text(whitespace = "break-spaces"), 
+    locations = gt::cells_body(columns = c(sub_category))
+  ) |> 
+  gt_global()  
+```
+
+```{r}
+#| label: tbl-fir-slc-costs
+#| tbl-cap: "Expense attribution with FIR schedule and column references"
+
+fir_meta$cost_classification |>   
+  mutate(
+    slc_s.c = glue::glue("{slc_schedule}.C{slc_column}"),
+    cost_payer = cost_payer |> 
+      stringr::str_replace_all("_", " ") |> 
+      stringr::str_to_title() |> 
+      forcats::fct_relevel("Total", "Ontario", "Canada", "Other Municipalities", "Users")
+  ) |> 
+  group_by(cost_payer, cost_type) |> 
+  summarize(
+    slc_s.c = stringr::str_c(slc_s.c, collapse = ", "),
+    .groups = "drop_last"
+  ) |> 
+  gt::gt() |> 
+  gt_global() |> 
+  gt::tab_options(
+    row_group.as_column = TRUE
+  ) |> 
+  gt::cols_label(
+    cost_payer = "Cost Payer", 
+    cost_type = "Cost Type",
+    slc_s.c = "FIR Schedule and Column(s)"
+  )
+```
+
+```{r}
+#| label: tbl-fir-slc-services
+#| tbl-cap: "Service classification with FIR lines"
+
+fir_meta$service_classification |> 
+  group_by(service_type, service) |> 
+  summarize(
+    slc_lines = stringr::str_c(unique(slc_line), collapse = ", "),
+    .groups = "drop_last"
+  ) |> 
+  gt::gt() |> 
+  gt_global() |> 
+  gt::tab_options(
+    row_group.as_column = TRUE
+  ) |> 
+  gt::cols_label(
+    service = "Service", 
+    slc_lines = "SLC Lines"
+  )
+
+```
+
+```{r}
+#| label: tbl-fir-slc-stats
+#| tbl-cap: "Summary statistics extracted from FIR"
+
+fir_meta$quantities |> 
+  filter(variable %in% c("households", "population")) |> 
+  transmute(
+    variable = variable |> stringr::str_to_title(),
+    slc_s.c.l = glue::glue("{slc_schedule}.C{slc_column}.{slc_line}")
+  ) |> 
+  gt::gt() |> 
+  gt_global() |> 
+  gt::cols_label(
+    variable = "Summary Statistic", 
+    slc_s.c.l = "FIR Schedule, Column, and Line"
+  )
+```
+
+```{r}
+#| label: tbl-efis-codes
+#| tbl-cap: "EFIS line items used in school board funding analysis"
+
+tibble::tribble(
+  ~cell_name, ~description,
+  "SC01100001C", "Revenue from education property taxes",
+  "SC01100004C", "Revenue from provincial legislative grants", 
+  "SC01100007C", "Revenue from other provincial grants", 
+  "SC01100010C", "Revenue from federal grants", 
+  "SC01100025C", "Total revenues", 
+  "SC01100049C", "Total expenses", 
+  "SC13_00165C", "Average daily enrolment"
+) |> 
+gt::gt() |> 
+gt_global() |> 
+gt::cols_label(
+  cell_name = "EFIS Cell Name", 
+  description = "Description"
+)
+```
+
+# Funding Analysis
+
+## Provincial Contributions to Municipal Services (FIR)
+
+```{r}
+#| label: tbl-fir-on-summary-soc
+#| tbl-cap: "Provincial Contributions to Municipal Services (Social)"
+
+tbls[["fir-on-summary-soc"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(cost_payer == "ontario", cost_type == "operating") |> 
+  filter(
+    service_type %in% "Social",
+    !(service %in% c("Hospitals", "Ambulance", "Culture"))
+  ) |>
+  tabulate_gap() |> 
+  mutate(
+    channel = "Municipal Services (Social)"
+  )
+
+tbls[["fir-on-summary-soc"]] |>
+  render_gap_tbl(
+    .ut_name = "Halton R",
+    .ut_label = "Halton"
+  )
+```
+
+```{r}
+#| label: fig-hr-fir-on-soc
+#| fig-cap: "Provincial operating funding for municipal services (per capita), 2015-2023"
+
+tbls[["fir-on-summary-soc"]] |>
+  filter(marsyear %in% 2015:2024) |>
+  slope_chart(
+    pc_real_muni, 
+    ylab = "Per-capita provincial support (Social)",
+    yfmt = scales::dollar_format(prefix = "$"), 
+    yavg = pc_real_prov,
+    highlight_ut = "Halton R", 
+    highlight_colour = "blue"
+  ) +
+  labs(
+    y = NULL, 
+    x = "Fiscal year ending",
+    subtitle = "Per-capita provincial operating grants to municipalities for social services",
+    caption = "FIR data;\nshows first and last year of data available for each municipality;\nincludes operating grants for social services (excluding hospitals, ambulance, culture);\namounts adjusted to 2023 dollars using Ontario CPI;"
+  )
+```
+
+```{r}
+#| label: tbl-fir-on-summary-core
+#| tbl-cap: "Provincial Contributions to Municipal Services (Core)"
+
+tbls[["fir-on-summary-core"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(cost_payer == "ontario", cost_type == "operating") |> 
+  filter(
+    service_type == "Core"
+  ) |>
+  tabulate_gap() |> 
+  mutate(
+    channel = "Municipal Services (Core)"
+  )
+
+tbls[["fir-on-summary-core"]] |>
+  render_gap_tbl(
+    .ut_name = "Halton R",
+    .ut_label = "Halton"
+  )
+```
+
+```{r}
+#| label: tbl-fir-on-summary-total
+#| tbl-cap: "Provincial Contributions to Municipal Services (Total)"
+
+tbls[["fir-on-summary-total"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(
+    cost_payer == "ontario", 
+    cost_type == "operating",
+    service_type %in% c("Core", "Social"), 
+    !(service %in% c("Hospitals", "Ambulance", "Culture"))
+  ) |> 
+  tabulate_gap() 
+
+tbls[["fir-on-summary-total"]] |>
+  render_gap_tbl(
+    .ut_name = "Halton R",
+    .ut_label = "Halton"
+  ) |>
+  gt::tab_footnote(
+    footnote = "A previous version of this report failed to exclude hospital, ambulance, and culture services from the total municipal services funding gap calculation, resulting in a misalignment between total and core + social components. This version corrects that error.", 
+    locations = gt::cells_column_spanners(spanners = "Provincial Support per Capita")
+  )
+
+```
+
+```{r}
+#| label: fig-hr-fir-on-total
+#| fig-cap: "Provincial Contributions to Municipal Services (Total) 2015-2024"
+
+tbls[["fir-on-summary-total"]] |> 
+  slope_chart(
+    yvar = pc_real_muni,
+    ylab = "Per-capita provincial funding (Total)",
+    yavg = pc_real_prov,
+    yfmt = scales::dollar_format(prefix = "$"), 
+    highlight_ut = "Halton R", 
+    highlight_colour = "blue"
+  )
+```
+
+`#pagebreak()`{=typst}
+
+## Municipal Contributions to Municipal Services (FIR)
+
+```{r}
+#| label: tbl-fir-muni-summary-soc
+#| tbl-cap: "Municipal Contributions to Municipal Services (Social)"
+
+tbls[["fir-muni-summary-soc"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(cost_payer == "municipal_taxpayers_plus_users", cost_type == "operating") |> 
+  filter(
+    service_type %in% "Social",
+    !(service %in% c("Hospitals", "Ambulance", "Culture"))
+  ) |>
+  tabulate_gap() |> 
+  mutate(
+    channel = "Municipal Services (Social)"
+  )
+
+tbls[["fir-muni-summary-soc"]] |>
+  render_gap_tbl(
+    .ut_name = "Halton R",
+    .ut_label = "Halton",
+    ylab = "Municipal Support per Capita"
+  ) |> 
+  gt::tab_footnote(
+    footnote = "Annual municipal contributions are equal to the sum of operating expenses paid for by property taxes and user fees, as reported in the FIR data.",
+    locations = gt::cells_column_spanners(spanners = "Municipal Support per Capita")
+  )
+```
+
+```{r}
+#| label: fig-hr-fir-muni-soc
+#| fig-cap: "Municipal Contributions to Municipal Services (Social), 2015-2023"
+
+tbls[["fir-muni-summary-soc"]] |>
+  filter(marsyear %in% 2015:2024) |>
+  slope_chart(
+    pc_real_muni, 
+    ylab = "Per-capita municipal support (Social)",
+    yfmt = scales::dollar_format(prefix = "$"), 
+    yavg = pc_real_prov,
+    highlight_ut = "Halton R", 
+    highlight_colour = "blue"
+  ) +
+  labs(
+    y = NULL, 
+    x = "Fiscal year ending",
+    subtitle = "Municipal support for social services",
+    caption = "FIR data;\nshows first and last year of data available for each municipality;\nincludes operating grants for social services (excluding hospitals, ambulance, culture);\namounts adjusted to 2023 dollars using Ontario CPI;"
+  )
+```
+
+```{r}
+#| label: tbl-fir-muni-summary-core
+#| tbl-cap: "Municipal Contributions to Municipal Services (Core)"
+
+tbls[["fir-muni-summary-core"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(cost_payer == "municipal_taxpayers_plus_users", cost_type == "operating") |> 
+  filter(
+    service_type == "Core"
+  ) |>
+  tabulate_gap() |> 
+  mutate(
+    channel = "Municipal Services (Core)"
+  )
+
+tbls[["fir-muni-summary-core"]] |>
+  render_gap_tbl(
+    .ut_name = "Halton R",
+    .ut_label = "Halton",
+    ylab = "Municipal Support per Capita"
+  ) 
+```
+
+```{r}
+#| label: tbl-fir-muni-summary-total
+#| tbl-cap: "Municipal Contributions to Municipal Services (Total)"
+
+tbls[["fir-muni-summary-total"]] <- fir_data |> 
+  semi_join(
+    key_comps, 
+    by = c("utid")
+  ) |> 
+  filter(
+    cost_payer == "municipal_taxpayers_plus_users", 
+    cost_type == "operating",
+    service_type %in% c("Core", "Social"), 
+    !(service %in% c("Hospitals", "Ambulance", "Culture"))
+  ) |> 
+  tabulate_gap() 
+
+tbls[["fir-muni-summary-total"]] |>
+  render_gap_tbl(
+    ylab = "Municipal Support per Capita"
+  )
+
+```
+
+```{r}
+#| label: fig-hr-fir-muni-total
+#| fig-cap: "Municipal Services (Total) 2015-2024"
+
+tbls[["fir-muni-summary-total"]] |> 
+  slope_chart(
+    yvar = pc_real_muni,
+    ylab = "Per-capita municipal funding (Total)",
+    yavg = pc_real_prov,
+    yfmt = scales::dollar_format(prefix = "$"), 
+    highlight_ut = "Halton R", 
+    highlight_colour = "blue"
+  )
+```
+
+`#pagebreak()`{=typst}
+
+## Nonprofit Services (T3010)
+
+```{r}
+#| label: tbl-t3010-summary
+#| tbl-cap: "Summary of provincial funding for poverty relief and community resource organizations, 2019-2023"
+
+tbls[["t3010-summary"]] <- t3010_ut |> 
+  semi_join(
+    key_comps,
+    by = c("utid")
+  ) |> 
+  filter(
+    marsyear %in% 2019:2023
+  ) |> 
+  filter(
+    category %in% c("Organizations Relieving Poverty", "Community Resource"),
+    !is.na(revenue_provincial), 
+    revenue_provincial > 0
+  ) |> 
+  tabulate_gap(
+    y = revenue_provincial,
+    t = marsyear
+  ) |> 
+  mutate(
+    channel = "Nonprofit Services (Poverty Relief and Community Resources)"
+  )
+
+tbls[["t3010-summary"]] |> 
+  filter(ut_name == "Halton R") |> 
+  render_gap_tbl(
+    .ut_name = "Halton R",
+    .ut_label = "Halton"
+  )
+```
+
+
+```{r}
+#| label: fig-hr-t3010-slope
+#| fig-cap: "Provincial funding for community organizations, 2019-2023"
+tbls[["t3010-summary"]] |>
+  dplyr::filter(marsyear %in% 2019:2023) |> 
+  slope_chart(
+    pc_real_muni, 
+    xvar = marsyear, 
+    ylab = "Per-capita provincial funding for poverty relief and community resources",
+    yavg = pc_real_prov,
+    yfmt = scales::dollar_format(prefix = "$"),
+    highlight_ut = "Halton R",
+    highlight_colour = "blue"
+  ) + 
+  labs(
+    caption = "T3010 data;
+    shows first and last year of data available for each municipality;
+    includes provincial funding for organizations relieving poverty and community resources;
+    amounts adjusted to 2023 dollars using Ontario CPI;"
+  )
+```
+
+`#pagebreak()`{=typst}
+
+## Healthcare (LHIN)
+
+```{r}
+#| label: tbl-lhin-summary
+#| tbl-cap: "LHIN Funding Summary 2017-2020"
+
+tbls[["lhin-summary"]] <- lhin |> 
+  dplyr::mutate(
+    dplyr::across(
+      matches("amount|cmha|css"), 
+      ~ real_dollars(.x, data_year, 2023)
+    )
+  ) |> 
+  dplyr::left_join(
+    fir_data |> 
+      filter(
+        ut_name == "Halton R",
+      ) |> 
+      distinct(data_year = marsyear, pop_halton = population, ut_name),
+    by = c("data_year")
+  ) |> 
+  filter(serves_halton) |> 
+  mutate(
+    amount_pc_gap = amount_pc - amount_pc_on,
+    total_gap = amount_pc_gap * pop_halton
+  ) %>%
+  bind_rows(
+    summarize(.,
+      lhin = "Central",
+      data_year = Inf,
+      across(
+        c(matches("amount_pc$")),
+        ~ weighted.mean(.x, pop_lhin, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("amount_pc_on$")),
+        ~ weighted.mean(.x, pop_on, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("pop_(lhin|halton)")),
+        ~ mean(.x, na.rm = TRUE)
+      ), 
+      .by = c(ut_name)
+    )  |> 
+    mutate(
+      amount_pc_gap = amount_pc - amount_pc_on,
+      total_gap = amount_pc_gap * pop_halton
+    )
+  ) |> 
+  mutate(
+    channel = "Local Health Integration Networks (LHINs)",
+    data_year = data_year, 
+    data_range = glue::glue("({min(data_year)}-{max(data_year[data_year < Inf])})"),
+    headline_gap_pc = amount_pc_gap,
+    headline_gap_total = total_gap
+  )
+
+tbls[["lhin-summary"]] |> 
+  select(
+    data_year, 
+    amount_pc_on, 
+    amount_pc, 
+    amount_pc_gap,
+    pop_lhin,
+    pop_halton,
+    total_gap
+  ) |> 
+  gt::gt() |>
+  gt::cols_label(
+    data_year = "Year",
+    amount_pc_on = "Ontario",
+    amount_pc = "Halton",
+    amount_pc_gap = "Gap",
+    pop_lhin = "Mississauga Halton LHIN",
+    pop_halton = "Halton",
+    total_gap = "Total Gap"
+  ) |>
+  gt::tab_spanner(
+    label = "Provincial Support Per Capita",
+    columns = c(matches("^amount_pc"))
+  ) |>
+  gt::tab_spanner(
+    label = "Population",
+    columns = c(matches("^pop"))
+  ) |> 
+  gt::fmt_currency(
+    columns = c(matches("^(amount|total)")), 
+    decimals = 0
+  ) |> 
+  gt::fmt_number(
+    columns = c(
+      matches("^pop")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::text_replace(
+    locations = gt::cells_body(columns = c(data_year)), 
+    pattern = "Inf",
+    replacement = "Average (2017-2020)"
+  ) |> 
+  gt_global()
+```
+
+
+## School Boards (EFIS)
+
+```{r}
+#| label: tbl-efis-summary
+#| tbl-cap: "School board funding 2021-2024"
+
+tbls[["efis-summary"]] <- efis |> 
+  filter(
+    school_board |> stringr::str_detect("halton")
+  ) |> 
+  left_join(
+    fir_data |> 
+      filter(
+        ut_name == "Halton R",
+      ) |> 
+      distinct(data_year = marsyear, population, ut_name),
+    by = c("data_year")
+  ) |>  
+  mutate(
+    rev_provincial_pc_gap = rev_provincial_total_gap / population
+  ) %>%
+  bind_rows(
+    summarize(., 
+      data_year = Inf,
+      across(
+        c(matches("rev_provincial_ps$")),
+        ~ weighted.mean(.x, avg_daily_enrolment, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("rev_provincial_ps_avg$")),
+        ~ weighted.mean(.x, avg_daily_enrolment_ontario, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("^(avg_daily_enrolment|population)")),
+        ~ mean(.x, na.rm = TRUE)
+      ),
+      .by = c(school_board, board_sector, ut_name)
+    ) |> 
+    mutate(
+      rev_provincial_ps_gap = rev_provincial_ps - rev_provincial_ps_avg,
+      rev_provincial_total_gap = rev_provincial_ps_gap * avg_daily_enrolment,
+      rev_provincial_pc_gap = rev_provincial_total_gap / population,
+    )
+  ) |> 
+  mutate(
+    channel = c(
+      "Public" = "Public School Boards",
+      "Catholic" = "Roman Catholic Separate School Boards"
+    )[board_sector],
+    data_year = data_year, 
+    data_range = glue::glue("({min(data_year)}-{max(data_year[data_year < Inf])})"),
+    headline_gap_pc = rev_provincial_pc_gap,
+    headline_gap_total = rev_provincial_total_gap
+  )
+
+tbls[["efis-summary"]] |> 
+  select(
+    board_sector,
+    data_year, 
+    rev_provincial_ps_avg,
+    rev_provincial_ps,
+    rev_provincial_ps_gap,
+    avg_daily_enrolment_ontario,
+    avg_daily_enrolment,
+    rev_provincial_total_gap,
+    population,
+    rev_provincial_pc_gap
+  ) |> 
+  gt::gt(groupname_col = "board_sector") |> 
+  gt::cols_label(
+    data_year = "Year",
+    rev_provincial_ps_avg = "Ontario",
+    rev_provincial_ps = "Halton",
+    rev_provincial_ps_gap = "Gap",
+    avg_daily_enrolment_ontario = "Ontario",
+    avg_daily_enrolment = "Halton",
+    rev_provincial_total_gap = "Total Gap",
+    rev_provincial_pc_gap = "Per Capita Gap",
+    population = "Halton Pop."
+  ) |> 
+  gt::tab_spanner(
+    label = "$ Per Student",
+    columns = c(matches("^rev_provincial_ps"))
+  ) |> 
+  gt::tab_spanner(
+    label = "Avg. Daily Enrolment",
+    columns = c(matches("^avg_daily_enrolment"))
+  ) |> 
+  gt::tab_options(
+    row_group.as_column = TRUE
+  ) |> 
+  gt::fmt_currency(
+    columns = c(rev_provincial_total_gap), 
+    decimals = 0, 
+    scale_by = 1e-6,
+    pattern = "{x}mm"
+  ) |> 
+  gt::fmt_currency(
+    columns = c(matches("^rev_provincial_ps")), 
+    decimals = 0
+  ) |> 
+  gt::fmt_number(
+    columns = c(
+      matches("enrolment|population")
+    ), 
+    decimals = 0, 
+    scale_by = 1e-3,
+    pattern = "{x}k"
+  ) |> 
+  gt::text_replace(
+    locations = gt::cells_body(columns = c(data_year)), 
+    pattern = "Inf",
+    replacement = "Average (2015-2024)"
+  ) |> 
+  gt_global()
+```
+
+`#pagebreak()`{=typst}
+
+## Combined Gap
+
+```{r}
+#| label: tbl-combined-gap
+#| tbl-cap: "Combined Funding Gap for Halton Region"
+
+tbls[["combined-gap"]] <- tbls[c(
+  "fir-on-summary-core",
+  "fir-on-summary-soc",
+  "t3010-summary",
+  "lhin-summary",
+  "efis-summary"
+)] |> 
+  map_dfr(\(.tbl) {
+    .tbl |>
+      dplyr::filter(
+        data_year == Inf,
+        ut_name == "Halton R"
+      ) |>  
+      dplyr::select(
+        ut_name, 
+        channel,
+        data_range,
+        headline_gap_pc,
+        headline_gap_total
+      ) 
+  }) %>%
+  dplyr::bind_rows(
+    summarize(., 
+      channel = "Z) Total",
+      data_range = "(2015-2024)",
+      headline_gap_pc = sum(headline_gap_pc, na.rm = TRUE),
+      headline_gap_total = sum(headline_gap_total, na.rm = TRUE),
+      .by = ut_name 
+    )
+  )
+
+tbls[["combined-gap"]] |> 
+  gt::gt() |> 
+  gt::cols_hide(
+    c(ut_name)
+  ) |> 
+  gt::cols_label(
+    channel = "Funding Channel",
+    data_range = "Data Range",
+    headline_gap_pc = "Per Capita Gap",
+    headline_gap_total = "Annualized Total Gap"
+  ) |> 
+  gt::fmt_currency(
+    columns = c(
+      matches("^(headline_gap)")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::tab_footnote(
+    footnote = "For individual channels, Per Capita Gap is the annual average per-capita funding gap over the data range; The total row sums the per-capita gaps across channels", 
+    locations = gt::cells_column_labels(columns = c(headline_gap_pc))
+  ) |> 
+  gt::tab_footnote(
+    footnote = "Annualized Total Gap is the product of Per Capita Gap and the average Halton Region population over the data range", 
+    locations = gt::cells_column_labels(columns = c(headline_gap_total))
+  ) |> 
+  gt_global()
+```
+
+
+```{r}
+#| label: tbl-combined-gap-detail
+#| tbl-cap: "Shifts in the Funding Gap for Halton Region Over Time"
+
+tbls[["combined-gap-detail"]] <- tbls[c(
+  "fir-on-summary-core",
+  "fir-on-summary-soc",
+  "t3010-summary",
+  "lhin-summary",
+  "efis-summary"
+)] |> 
+  map_dfr(\(.tbl) {
+    .tbl |>
+      dplyr::filter(
+        ut_name == "Halton R"
+      ) |>  
+      dplyr::select(
+        ut_name,
+        channel,
+        data_year,
+        data_range,
+        headline_gap_pc,
+        headline_gap_total
+      ) |> 
+      dplyr::mutate(
+        observed_at = dplyr::case_when(
+          data_year == Inf ~ "Annual Average",
+          data_year == min(data_year[data_year < Inf]) ~ "Start Year",
+          data_year == max(data_year[data_year < Inf]) ~ "End Year",
+          TRUE ~ NA_character_
+        ) |> 
+          factor(
+            levels = c("Start Year", "End Year", "Annual Average")
+          )
+      ) |> 
+      dplyr::filter(!is.na(observed_at)) |> 
+      dplyr::select(-data_year)
+  }) %>%
+  dplyr::bind_rows(
+    summarize(., 
+      channel = "Z) Total",
+      data_range = "(2015-2024)",
+      headline_gap_pc = sum(headline_gap_pc, na.rm = TRUE),
+      headline_gap_total = sum(headline_gap_total, na.rm = TRUE),
+      .by = c(observed_at, ut_name)
+    )
+  ) |> 
+  tidyr::pivot_wider(
+    names_from = observed_at,
+    values_from = c(headline_gap_pc, headline_gap_total),
+    names_glue = "{observed_at}::{.value}"
+  ) |> 
+  dplyr::select(
+    ut_name,
+    channel, 
+    data_range, 
+    matches("Start"),
+    matches("End"), 
+    matches("Annual")
+  )
+
+tbls[["combined-gap-detail"]] |>
+  dplyr::mutate(
+    channel_short = dplyr::case_when(
+      channel == "Municipal Services (Core)" ~ "MS (C)",
+      channel == "Municipal Services (Social)" ~ "MS (S)",
+      channel == "Public School Boards" ~ "PSB",
+      channel == "Roman Catholic Separate School Boards" ~ "CSB",
+      channel == "Nonprofit Services (Poverty Relief and Community Resources)" ~ "NPS (PR+CR)",
+      channel == "Local Health Integration Networks (LHINs)" ~ "LHIN",
+      channel == "Z) Total" ~ "TOT",
+      TRUE ~ channel
+    )
+  ) |> 
+  dplyr::select(
+    channel_short,
+    data_range,
+    dplyr::everything()
+  ) |>
+  gt::gt() |> 
+  gt::cols_hide(
+    c(ut_name, channel)
+  ) |> 
+  gt::cols_label(
+    channel_short = "Channel",
+    data_range = "Data Range"
+  ) |>
+  gt::cols_label_with(
+    columns = c(matches("gap_total$")), 
+    fn = \(.x) {"TOT (mn)"}
+  ) |> 
+  gt::cols_label_with(
+    columns = c(matches("gap_pc$")), 
+    fn = \(.x) {"PC ($)"}
+  ) |> 
+  gt::tab_spanner_delim(
+    delim = "::"
+  ) |> 
+  gt::fmt_currency(
+    columns = c(
+      matches("headline_gap_pc")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::fmt_currency(
+    columns = c(
+      matches("headline_gap_total")
+    ), 
+    scale_by = 1e-6,
+    decimals = 0
+  ) |> 
+  gt::text_replace(
+    locations = gt::cells_body(
+      columns = c(channel)
+    ), 
+    pattern = "Poverty Relief and Community Resources",
+    replacement = "PR + CR"
+  ) |> 
+  gt_global()
+```
+
+```{r}
+#| label: write-hr-tbls
+#| output: false
+
+tbls |> 
+  purrr::map(\(.tbl) {
+    .tbl |> 
+      dplyr::filter(
+        ut_name == "Halton R"
+      )
+  }) |> 
+  write_tbl_wb(
+    "reports/tbls/halton-replication-tbls.xlsx"
+  )
+```
