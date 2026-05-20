@@ -905,17 +905,44 @@ fir_data |>
   )
 ```
 
+## Supplemental Tables
+
+```{r}
+tbls[["lhin-summary-comps"]] <- lhin |> 
+  mutate(
+    across(
+      matches("amount|cmha|css"), 
+      ~ real_dollars(.x, data_year, 2023)
+    )
+  ) |> 
+  select(-c(serves_peel, serves_york))
+
+
+
+tbls[["efis-summary-comps"]] <- efis |> 
+  filter(
+    board_language == "English"
+  ) |> 
+  select(
+    b_no, 
+    school_board, 
+    board_sector, 
+    data_year,
+    board_size,
+    avg_daily_enrolment, 
+    rev_provincial,
+    rev_provincial_ps,
+    rev_provincial_ps_avg,
+    rev_provincial_ps_gap,
+    rev_provincial_total_gap
+  )
+```
+
 ```{r}
 #| label: write-yr-tbls
 #| output: false
 
 tbls |> 
-  purrr::map(\(.tbl) {
-    .tbl |> 
-      dplyr::filter(
-        ut_name == "York R"
-      )
-  }) |> 
   write_tbl_wb(
     "reports/tbls/york-replication-tbls.xlsx"
   )

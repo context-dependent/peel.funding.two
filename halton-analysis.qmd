@@ -558,7 +558,7 @@ tbls[["fir-on-summary-soc"]] |>
 
 ```{r}
 #| label: fig-hr-fir-on-soc
-#| fig-cap: "Provincial operating funding for municipal services (per capita), 2015-2023"
+#| fig-cap: "Provincial operating funding for municipal services (per capita), 2015-2024"
 
 tbls[["fir-on-summary-soc"]] |>
   filter(marsyear %in% 2015:2024) |>
@@ -604,6 +604,21 @@ tbls[["fir-on-summary-core"]] |>
 ```
 
 ```{r}
+#| label: fig-hr-fir-on-core
+#| fig-cap: "Provincial Contributions to Municipal Services (Core) 2015-2024"
+
+tbls[["fir-on-summary-core"]] |> 
+  slope_chart(
+    yvar = pc_real_muni,
+    ylab = "Per-capita provincial funding (Core)",
+    yavg = pc_real_prov,
+    yfmt = scales::dollar_format(prefix = "$"), 
+    highlight_ut = "Halton R", 
+    highlight_colour = "blue"
+  )
+```
+
+```{r}
 #| label: tbl-fir-on-summary-total
 #| tbl-cap: "Provincial Contributions to Municipal Services (Total)"
 
@@ -624,12 +639,7 @@ tbls[["fir-on-summary-total"]] |>
   render_gap_tbl(
     .ut_name = "Halton R",
     .ut_label = "Halton"
-  ) |>
-  gt::tab_footnote(
-    footnote = "A previous version of this report failed to exclude hospital, ambulance, and culture services from the total municipal services funding gap calculation, resulting in a misalignment between total and core + social components. This version corrects that error.", 
-    locations = gt::cells_column_spanners(spanners = "Provincial Support per Capita")
   )
-
 ```
 
 ```{r}
@@ -684,7 +694,7 @@ tbls[["fir-muni-summary-soc"]] |>
 
 ```{r}
 #| label: fig-hr-fir-muni-soc
-#| fig-cap: "Municipal Contributions to Municipal Services (Social), 2015-2023"
+#| fig-cap: "Municipal Contributions to Municipal Services (Social), 2015-2024"
 
 tbls[["fir-muni-summary-soc"]] |>
   filter(marsyear %in% 2015:2024) |>
@@ -731,6 +741,21 @@ tbls[["fir-muni-summary-core"]] |>
 ```
 
 ```{r}
+#| label: fig-hr-fir-muni-core  
+#| fig-cap: "Municipal Services (Core) 2015-2024"
+
+tbls[["fir-muni-summary-core"]] |> 
+  slope_chart(
+    yvar = pc_real_muni,
+    ylab = "Per-capita municipal funding (Core)",
+    yavg = pc_real_prov,
+    yfmt = scales::dollar_format(prefix = "$"), 
+    highlight_ut = "Halton R", 
+    highlight_colour = "blue"
+  )
+```
+
+```{r}
 #| label: tbl-fir-muni-summary-total
 #| tbl-cap: "Municipal Contributions to Municipal Services (Total)"
 
@@ -749,6 +774,8 @@ tbls[["fir-muni-summary-total"]] <- fir_data |>
 
 tbls[["fir-muni-summary-total"]] |>
   render_gap_tbl(
+    .ut_name = "Halton R",
+    .ut_label = "Halton",
     ylab = "Municipal Support per Capita"
   )
 
@@ -835,7 +862,7 @@ tbls[["t3010-summary"]] |>
 
 ```{r}
 #| label: tbl-lhin-summary
-#| tbl-cap: "LHIN Funding Summary 2017-2020"
+#| tbl-cap: "LHIN Funding Summary 2017-2020 (Original)"
 
 tbls[["lhin-summary"]] <- lhin |> 
   dplyr::mutate(
@@ -905,6 +932,119 @@ tbls[["lhin-summary"]] |>
     amount_pc = "Halton",
     amount_pc_gap = "Gap",
     pop_lhin = "Mississauga Halton LHIN",
+    pop_halton = "Halton",
+    total_gap = "Total Gap"
+  ) |>
+  gt::tab_spanner(
+    label = "Provincial Support Per Capita",
+    columns = c(matches("^amount_pc"))
+  ) |>
+  gt::tab_spanner(
+    label = "Population",
+    columns = c(matches("^pop"))
+  ) |> 
+  gt::fmt_currency(
+    columns = c(matches("^(amount|total)")), 
+    decimals = 0
+  ) |> 
+  gt::fmt_number(
+    columns = c(
+      matches("^pop")
+    ), 
+    decimals = 0
+  ) |> 
+  gt::text_replace(
+    locations = gt::cells_body(columns = c(data_year)), 
+    pattern = "Inf",
+    replacement = "Average (2017-2020)"
+  ) |> 
+  gt_global()
+```
+
+
+```{r}
+#| label: tbl-lhin-summary-corrected
+#| tbl-cap: "LHIN Funding Summary 2017-2020 (Corrected)"
+
+tbls[["lhin-summary-corrected"]] <- lhin |> 
+  dplyr::mutate(
+    dplyr::across(
+      matches("amount|cmha|css"), 
+      ~ real_dollars(.x, data_year, 2023)
+    )
+  ) |> 
+  dplyr::left_join(
+    fir_data |> 
+      filter(
+        ut_name == "Halton R",
+      ) |> 
+      distinct(data_year = marsyear, pop_halton = population, ut_name),
+    by = c("data_year")
+  ) |> 
+  filter(
+    lhin |> stringr::str_detect("Halton|Hamilton")
+  ) |> 
+  summarize(
+    lhin = "MH + HNHB",
+    amount_pc = weighted.mean(amount_pc, pop_lhin), 
+    pop_lhin = sum(pop_lhin), 
+    amount_pc_on = weighted.mean(amount_pc_on, pop_on),
+    pop_on = mean(pop_on), 
+    pop_halton = mean(pop_halton),
+    .by = c(ut_name, data_year)
+  ) |> 
+  mutate(
+    amount_pc_gap = amount_pc - amount_pc_on,
+    total_gap = amount_pc_gap * pop_halton
+  ) %>%
+  bind_rows(
+    summarize(.,
+      lhin = "MH + HNHB",
+      data_year = Inf,
+      across(
+        c(matches("amount_pc$")),
+        ~ weighted.mean(.x, pop_lhin, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("amount_pc_on$")),
+        ~ weighted.mean(.x, pop_on, na.rm = TRUE)
+      ), 
+      across(
+        c(matches("pop_(lhin|halton)")),
+        ~ mean(.x, na.rm = TRUE)
+      ), 
+      .by = c(ut_name)
+    )  |> 
+    mutate(
+      amount_pc_gap = amount_pc - amount_pc_on,
+      total_gap = amount_pc_gap * pop_halton
+    )
+  ) |> 
+  mutate(
+    channel = "Local Health Integration Networks (LHINs)",
+    data_year = data_year, 
+    data_range = glue::glue("({min(data_year)}-{max(data_year[data_year < Inf])})"),
+    headline_gap_pc = amount_pc_gap,
+    headline_gap_total = total_gap
+  )
+
+tbls[["lhin-summary-corrected"]] |> 
+  select(
+    data_year, 
+    amount_pc_on, 
+    amount_pc, 
+    amount_pc_gap,
+    pop_lhin,
+    pop_halton,
+    total_gap
+  ) |> 
+  gt::gt() |>
+  gt::cols_label(
+    data_year = "Year",
+    amount_pc_on = "Ontario",
+    amount_pc = "Halton",
+    amount_pc_gap = "Gap",
+    pop_lhin = "MH+HNHB LHIN",
     pop_halton = "Halton",
     total_gap = "Total Gap"
   ) |>
@@ -1033,7 +1173,7 @@ tbls[["efis-summary"]] |>
     pattern = "{x}mm"
   ) |> 
   gt::fmt_currency(
-    columns = c(matches("^rev_provincial_ps")), 
+    columns = c(matches("^rev_provincial_(ps|pc)")), 
     decimals = 0
   ) |> 
   gt::fmt_number(
@@ -1241,18 +1381,430 @@ tbls[["combined-gap-detail"]] |>
   gt_global()
 ```
 
+## Supplemental
+
+- [x] LHIN summary tables with comparators
+- [x] EFIS summary tables with comparators
+- [x] LHIN and EFIS summary figures with comparators
+- [x] LHIN correction (inc hamilton...)
+- [x] Peel p15 charts (overall per-capita averages)
+
+```{r}
+#| label: fig-lhin-summary
+#| fig-cap: "Provincial support per capita across LHINs, 2017-2020"
+#| fig-height: 5
+#| fig-width: 8
+
+lhin |> 
+  mutate(
+    amount_pc_lhin_avg = weighted.mean(amount_pc, pop_lhin), 
+    .by = c(lhin)
+  ) |> 
+  mutate(
+    lhin = forcats::fct_reorder(lhin, amount_pc_lhin_avg)
+  ) |> 
+  ggplot(aes(x = amount_pc, y = lhin)) + 
+  geom_col(aes(fill = serves_halton)) +
+  facet_wrap(~data_year, nrow = 1) + 
+  bptheme::theme_blueprint(
+    plot_background_color = "white"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "TRUE" = "blue",
+      "FALSE" = "grey40"
+    ),
+    name = NULL,
+    labels = c(
+      "TRUE" = "Serves Halton",
+      "FALSE" = "Does Not Serve Halton"
+    )
+  ) + 
+  scale_x_continuous(
+    labels = scales::dollar_format(prefix = "$"), 
+    expand = expansion(mult = c(0, 0.05))
+  ) + 
+  labs(
+    x = "Provincial Support per Capita", 
+    y = NULL
+  )
+```
+
+```{r}
+#| label: fig-efis-summary
+#| fig-cap: "Provincial support per student across english-language school boards, 2021-2024"
+#| fig-height: 4
+#| fig-width: 8
+
+efis |> 
+  mutate(
+    board_sector = forcats::fct_relevel(
+      board_sector, 
+      "Public", 
+      "Catholic"
+    )
+  ) |> 
+  ggplot(aes(x = data_year, y = rev_provincial_ps)) +
+  ggbeeswarm::geom_beeswarm(
+    aes(colour = school_board |> stringr::str_detect("halton")), 
+    shape = 21, 
+    size = 3, 
+    stroke = 2, 
+    alpha = .8
+  ) +
+  facet_wrap(~board_sector, nrow = 1) +
+  scale_colour_manual(
+    values = c(
+      "TRUE" = "blue",
+      "FALSE" = "grey40"
+    ),
+    name = NULL,
+    labels = c(
+      "TRUE" = "Halton Region School Boards",
+      "FALSE" = "Ontario EL School Boards 22k or More Enrolment"
+    )
+  ) + 
+  scale_y_continuous(
+    labels = scales::dollar_format(prefix = "$"), 
+  ) + 
+  labs(
+    x = "Fiscal Year Ending", 
+    subtitle = "Provincial support per student",
+    y = NULL
+  ) + 
+  bptheme::theme_blueprint(
+    plot_background_color = "white",
+    subtitle_family = "Arial", 
+    subtitle_color = "black"
+  )
+
+
+```
+
+```{r}
+#| label: fig-efis-summary-bar
+#| fig-cap: "Provincial support per student across english-language school boards, 2021-2024"
+#| fig-height: 6
+#| fig-width: 7.5
+efis |> 
+  filter(board_language == "English") |> 
+  filter(
+    school_board |> 
+      stringr::str_detect(
+        "ottawa|york|peel|toronto|durham|halton|hamilton|waterloo"
+      )
+  ) |> 
+  mutate(
+    school_board = school_board |> 
+      stringr::str_replace("_dsb", "") |> 
+      stringr::str_replace_all("_", " ") |>
+      stringr::str_replace("cath.*$", "(C)") |>  
+      stringr::str_to_title()
+  ) |> 
+  summarize(
+    rev_provincial_ps = weighted.mean(
+      rev_provincial_ps, 
+      avg_daily_enrolment
+    ), 
+    avg_daily_enrolment = mean(avg_daily_enrolment),
+    .by = c(school_board, board_sector)
+  ) %>%
+  bind_rows(
+    summarize(
+      .,
+      school_board = "Average",
+      rev_provincial_ps = weighted.mean(
+        rev_provincial_ps, 
+        avg_daily_enrolment
+      ), 
+      .by = c(board_sector)
+    ) |> 
+    mutate(
+      school_board = dplyr::case_when(
+        board_sector == "Public" ~ "Average (P)", 
+        .default =  "Average (C)"
+      )
+    )
+  ) |>  
+  mutate(
+    school_board = forcats::fct_reorder(
+      school_board, rev_provincial_ps
+    ), 
+    highlight = dplyr::case_when(
+      school_board |> stringr::str_detect("Halton") ~ "2:Halton", 
+      school_board |> stringr::str_detect("Average") ~ "1:Average",
+      TRUE ~ "0:Other"
+    )
+  ) |> 
+  ggplot(aes(rev_provincial_ps, school_board)) + 
+  facet_wrap(~board_sector, scales = "free", ncol = 1) + 
+  geom_col(aes(fill = highlight)) + 
+  geom_text(
+    aes(
+      label = scales::dollar(rev_provincial_ps, accuracy = 1), 
+      x = -100
+    ), hjust = 1, size = 10 / ggplot2::.pt) + 
+  bptheme::theme_blueprint(
+    plot_background_color = "white", 
+    base_size = 10, 
+    grid = "Xx"
+  ) + 
+  theme(
+    strip.text = element_text(size = 10)
+  ) + 
+  scale_x_continuous(
+    labels = scales::dollar_format(accuracy = 1, scale = 1e-3, suffix = "k"),
+    limits = c(NA, 12000),
+    expand = expansion(mult = c(.2, .05))) + 
+  scale_fill_manual(values = c("grey", "#00cf97", "#0000FF"), guide = "none") +
+  labs(
+    x = "Provincial Support Per Student", 
+    y = NULL
+  )
+```
+
+```{r}
+#| label: fig-lhin-summary-comps
+#| fig-cap: "Provincial support per capita across LHINs, 2017-2020"
+
+lhin |> 
+  mutate(
+    across(
+      matches("amount|cmha|css"), 
+      ~ real_dollars(.x, data_year, 2023)
+    ), 
+    serves_halton = lhin |> stringr::str_detect("Halton|Hamilton")
+  ) |> 
+  summarize(
+    amount_pc = weighted.mean(amount_pc, pop_lhin), 
+    pop_lhin = mean(pop_lhin),
+    .by = c(lhin, serves_halton)
+  ) %>%
+  bind_rows(
+    summarize(.,
+      lhin = "Ontario Average", 
+      amount_pc = weighted.mean(amount_pc, pop_lhin, na.rm = TRUE),
+      pop_lhin = sum(pop_lhin, na.rm = TRUE)
+    )
+  ) |> 
+  mutate(
+    lhin = forcats::fct_reorder(lhin, amount_pc), 
+    highlight = case_when(
+      serves_halton ~ "2:Halton",
+      lhin == "Ontario Average" ~ "1:Average",
+      .default = "0:Other"
+    )
+  ) |> 
+  ggplot(aes(amount_pc, lhin)) + 
+  geom_col(aes(fill = highlight)) + 
+  geom_text(
+    aes(
+      label = scales::dollar(amount_pc, accuracy = 1), 
+      x = -10
+    ), hjust = 1, size = 10 / ggplot2::.pt) + 
+  bptheme::theme_blueprint(
+    plot_background_color = "white", 
+    base_size = 10, 
+    grid = "Xx"
+  ) + 
+  theme(
+    strip.text = element_text(size = 10)
+  ) + 
+  scale_x_continuous(
+    labels = scales::dollar_format(accuracy = 1),
+    limits = c(-100, 400),
+    expand = expansion(mult = c(0, .05))) + 
+  scale_fill_manual(values = c("grey", "#00cf97", "#0000FF"), guide = "none") +
+  labs(
+    x = "Provincial Support Per Capita", 
+    y = NULL
+  )
+```
+
+```{r}
+#| label: fig-fir-summary-comps-soc
+#| fig-cap: "Provincial support per capita for municipal social services across FIR municipalities, 2015-2024"
+
+tbls[["fir-on-summary-soc"]] |> 
+  filter(marsyear == Inf) %>%
+  bind_rows(
+    summarize(., 
+      ut_name = "Ontario Average", 
+      across(
+        c(matches("^pc_real")),
+        ~ weighted.mean(.x, pop_muni, na.rm = TRUE)
+      ), 
+    )
+  ) |> 
+  mutate(
+    ut_name = forcats::fct_reorder(ut_name, pc_real_muni), 
+    highlight = case_when(
+      ut_name == "Halton R" ~ "2:Halton",
+      ut_name == "Ontario Average" ~ "1:Average",
+      TRUE ~ "0:Other"
+    )
+  ) |> 
+  ggplot(aes(pc_real_muni, ut_name)) + 
+  geom_col(aes(fill = highlight)) + 
+  geom_text(
+    aes(
+      label = scales::dollar(pc_real_muni, accuracy = 1), 
+      x = -10
+    ), hjust = 1, size = 10 / ggplot2::.pt) + 
+  bptheme::theme_blueprint(
+    plot_background_color = "white", 
+    base_size = 10, 
+    grid = "Xx"
+  ) + 
+  theme(
+    strip.text = element_text(size = 10)
+  ) + 
+  scale_x_continuous(
+    labels = scales::dollar_format(accuracy = 1),
+    limits = c(-100, NA),
+    expand = expansion(mult = c(0, .05))) + 
+  scale_fill_manual(values = c("grey", "#00cf97", "#0000FF"), guide = "none") +
+  labs(
+    x = "Provincial Support Per Capita", 
+    y = NULL
+  )
+```
+
+```{r}
+#| label: fig-fir-summary-comps-core
+#| fig-cap: "Provincial support per capita for municipal core services across FIR municipalities, 2015-2024"
+
+tbls[["fir-on-summary-core"]] |> 
+  filter(marsyear == Inf) %>%
+  bind_rows(
+    summarize(., 
+      ut_name = "Ontario Average", 
+      across(
+        c(matches("^pc_real")),
+        ~ weighted.mean(.x, pop_muni, na.rm = TRUE)
+      ), 
+    )
+  ) |> 
+  mutate(
+    ut_name = forcats::fct_reorder(ut_name, pc_real_muni), 
+    highlight = case_when(
+      ut_name == "Halton R" ~ "2:Halton",
+      ut_name == "Ontario Average" ~ "1:Average",
+      TRUE ~ "0:Other"
+    )
+  ) |> 
+  ggplot(aes(pc_real_muni, ut_name)) + 
+  geom_col(aes(fill = highlight)) + 
+  geom_text(
+    aes(
+      label = scales::dollar(pc_real_muni, accuracy = 1), 
+      x = -1
+    ), hjust = 1, size = 10 / ggplot2::.pt) + 
+  bptheme::theme_blueprint(
+    plot_background_color = "white", 
+    base_size = 10, 
+    grid = "Xx"
+  ) + 
+  theme(
+    strip.text = element_text(size = 10)
+  ) + 
+  scale_x_continuous(
+    labels = scales::dollar_format(accuracy = 1),
+    limits = c(-15, NA),
+    expand = expansion(mult = c(0, .05))) + 
+  scale_fill_manual(values = c("grey", "#00cf97", "#0000FF"), guide = "none") +
+  labs(
+    x = "Provincial Support Per Capita", 
+    y = NULL
+  )
+```
+
+```{r}
+#| label: fig-t3010-summary-comps
+#| fig-cap: "Provincial support per capita for non-profit community supports across FIR municipalities, 2019-2023"
+
+tbls[["t3010-summary"]] |>
+  filter(marsyear == Inf) %>%
+  bind_rows(
+    summarize(., 
+      ut_name = "Ontario Average", 
+      across(
+        c(matches("^pc_real")),
+        ~ weighted.mean(.x, pop_muni, na.rm = TRUE)
+      ), 
+    )
+  ) |> 
+  mutate(
+    ut_name = forcats::fct_reorder(ut_name, pc_real_muni), 
+    highlight = case_when(
+      ut_name == "Halton R" ~ "2:Halton",
+      ut_name == "Ontario Average" ~ "1:Average",
+      TRUE ~ "0:Other"
+    )
+  ) |> 
+  ggplot(aes(pc_real_muni, ut_name)) + 
+  geom_col(aes(fill = highlight)) + 
+  geom_text(
+    aes(
+      label = scales::dollar(pc_real_muni, accuracy = 1), 
+      x = -5
+    ), hjust = 1, size = 10 / ggplot2::.pt) + 
+  bptheme::theme_blueprint(
+    plot_background_color = "white", 
+    base_size = 10, 
+    grid = "Xx"
+  ) + 
+  theme(
+    strip.text = element_text(size = 10)
+  ) + 
+  scale_x_continuous(
+    labels = scales::dollar_format(accuracy = 1),
+    limits = c(-5, NA),
+    expand = expansion(mult = c(0.2, .05))) + 
+  scale_fill_manual(values = c("grey", "#00cf97", "#0000FF"), guide = "none") +
+  labs(
+    x = "Provincial Support Per Capita", 
+    y = NULL
+  )
+```
+
+```{r}
+tbls[["lhin-summary-comps"]] <- lhin |> 
+  mutate(
+    across(
+      matches("amount|cmha|css"), 
+      ~ real_dollars(.x, data_year, 2023)
+    )
+  ) |> 
+  select(-c(serves_peel, serves_york))
+
+
+
+tbls[["efis-summary-comps"]] <- efis |> 
+  filter(
+    board_language == "English"
+  ) |> 
+  select(
+    b_no, 
+    school_board, 
+    board_sector, 
+    data_year,
+    board_size,
+    avg_daily_enrolment, 
+    rev_provincial,
+    rev_provincial_ps,
+    rev_provincial_ps_avg,
+    rev_provincial_ps_gap,
+    rev_provincial_total_gap
+  )
+```
+
 ```{r}
 #| label: write-hr-tbls
 #| output: false
 
 tbls |> 
-  purrr::map(\(.tbl) {
-    .tbl |> 
-      dplyr::filter(
-        ut_name == "Halton R"
-      )
-  }) |> 
   write_tbl_wb(
-    "reports/tbls/halton-replication-tbls.xlsx"
+    "reports/tbls/halton-analysis-tbls.xlsx"
   )
 ```
